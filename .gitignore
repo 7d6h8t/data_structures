@@ -31,5 +31,8 @@
 *.out
 *.app
 
-#VS code
+# output director
+bin/
+
+# VS code
 .vscode
