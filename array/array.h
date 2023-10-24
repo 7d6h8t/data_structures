@@ -4,12 +4,10 @@ namespace ds {
 template <typename T, std::size_t size>
 class array {
 private:
-    void initialize() {}
-
     template <typename... types>
-    void initialize(const T& arg, const types&... args) {
-        elems[size - sizeof...(args) - 1] = arg;
-        initialize(args...);
+    void initialize(const types&... args) {
+        std::size_t index = 0;
+        ((elems[index++] = args), ...);
     }
 
 public:
