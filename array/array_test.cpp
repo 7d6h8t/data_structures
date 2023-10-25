@@ -3,24 +3,11 @@
 #include <concepts>
 #include <iostream>
 
-template <typename _Ty>
-void print(const _Ty& arg) {
-    std::cout << arg << std::flush;
-}
-
-template <typename _Ty, typename... types>
-void print(const _Ty& arg, const types&... args) {
-    std::cout << arg << " " << std::flush;
-    print(args...);
-    std::cout << std::endl;
-}
-
 template <typename T>
-concept Addable = requires(T a, T b) { a + b; };
+concept printable = requires(T arg) { std::cout << arg; };
 
-template <Addable... types>
-void add(const types&... args) {
-    std::cout << (... + args) << std::flush;
+void print(printable auto const&... args) {
+    ((std::cout << args << " " << std::flush), ...) << std::endl;
 }
 
 int main() {
@@ -29,6 +16,8 @@ int main() {
 
     ds::array<int32_t, 5> ds_array_1;
     ds::array<int32_t, 5> ds_array_2{10, 20, 30, 40, 50};
+
+    print(1, 2, 3, "helo", ds_array_2[3]);
 
     return 0;
 }
