@@ -2,7 +2,7 @@
 #include <cstdint>
 namespace ds {
 template <typename T, std::size_t size>
-class array {
+class array final {
 public:
     template <typename... types>
     requires(std::same_as<T, types> && ...)
