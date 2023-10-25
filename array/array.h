@@ -6,9 +6,12 @@ namespace ds {
     template <typename T, std::size_t size>
     class array final {
     private:
+        using value_type = T;
         using size_type = std::size_t;
-        using reference = T&;
-        using const_reference = const T&;
+        using reference = value_type&;
+        using const_reference = const value_type&;
+        using pointer = value_type*;
+        using const_pointer = const value_type*;
 
     public:
         template <typename... types>
@@ -53,6 +56,14 @@ namespace ds {
 
         const_reference back() const noexcept {
             return elems[size - 1];
+        }
+
+        pointer data() noexcept {
+            return elems;
+        }
+
+        const_pointer data() const noexcept {
+            return elems;
         }
 
     private:
