@@ -47,6 +47,14 @@ namespace ds {
             return elems[0];
         }
 
+        reference back() noexcept {
+            return elems[size - 1];
+        }
+
+        const_reference back() const noexcept {
+            return elems[size - 1];
+        }
+
     private:
         T elems[size];
     };
