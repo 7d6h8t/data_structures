@@ -39,6 +39,14 @@ namespace ds {
             return elems[index];
         }
 
+        reference front() noexcept {
+            return elems[0];
+        }
+
+        const_reference front() const noexcept {
+            return elems[0];
+        }
+
     private:
         T elems[size];
     };
