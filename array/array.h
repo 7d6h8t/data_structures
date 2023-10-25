@@ -7,6 +7,8 @@ namespace ds {
     class array final {
     private:
         using size_type = std::size_t;
+        using reference = T&;
+        using const_reference = const T&;
 
     public:
         template <typename... types>
@@ -17,23 +19,23 @@ namespace ds {
         }
 
     public:
-        T& at(const size_type index) {
+        reference at(const size_type index) {
             if (index > size)
                 throw std::out_of_range("");
             return elems[index];
         }
 
-        const T& at(const size_type index) const {
+        const_reference at(const size_type index) const {
             if (index > size)
                 throw std::out_of_range("");
             return elems[index];
         }
 
-        T& operator[](const size_type index) noexcept {
+        reference operator[](const size_type index) noexcept {
             return elems[index];
         }
 
-        const T& operator[](const size_type index) const noexcept {
+        const_reference operator[](const size_type index) const noexcept {
             return elems[index];
         }
 
