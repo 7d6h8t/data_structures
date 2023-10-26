@@ -108,4 +108,20 @@ namespace ds {
     private:
         T elems_[size_];
     };
+
+    template <typename T, std::size_t size>
+    bool operator==(const ds::array<T, size>& lhs,
+                    const ds::array<T, size>& rhs) noexcept {
+        if (lhs.size() != rhs.size())
+            return false;
+
+        if (lhs.empty() && rhs.empty())
+            return true;
+
+        for (int i = 0; i < lhs.size(); ++i)
+            if (lhs[i] != rhs[i])
+                return false;
+
+        return true;
+    }
 } // namespace ds
