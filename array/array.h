@@ -1,3 +1,4 @@
+#include <compare>
 #include <concepts>
 #include <cstdint>
 #include <stdexcept>
@@ -110,18 +111,28 @@ namespace ds {
     };
 
     template <typename T, std::size_t size>
+    std::strong_ordering operator<=>(const ds::array<T, size>& lhs,
+                                     const ds::array<T, size>& rhs) noexcept {
+        if (lhs.size() < rhs.size())
+            return std::strong_ordering::less;
+
+        if (lhs.size() > rhs.size())
+            return std::strong_ordering::greater;
+
+        for (std::size_t i = 0; i < lhs.size(); ++i) {
+            if (lhs[i] < rhs[i])
+                return std::strong_ordering::less;
+
+            if (lhs[i] > rhs[i])
+                return std::strong_ordering::greater;
+        }
+
+        return std::strong_ordering::equal;
+    }
+
+    template <typename T, std::size_t size>
     bool operator==(const ds::array<T, size>& lhs,
                     const ds::array<T, size>& rhs) noexcept {
-        if (lhs.size() != rhs.size())
-            return false;
-
-        if (lhs.empty() && rhs.empty())
-            return true;
-
-        for (int i = 0; i < lhs.size(); ++i)
-            if (lhs[i] != rhs[i])
-                return false;
-
-        return true;
+        return (lhs <=> rhs) == std::strong_ordering::equal;
     }
 } // namespace ds

@@ -16,13 +16,25 @@ int main() {
     ds::array<int32_t, 5> array_3{10, 20, 30, 40, 51};
 
     if (array_2 == array_3)
-        std::cout << "same array" << std::endl;
+        std::cout << "equal" << std::endl;
+
+    if ((array_2 <=> array_3) == std::strong_ordering::less)
+        std::cout << "less" << std::endl;
+
+    if ((array_2 <=> array_3) == std::strong_ordering::greater)
+        std::cout << "greater" << std::endl;
+
+    if ((array_2 <=> array_3) == std::strong_ordering::equal)
+        std::cout << "equal" << std::endl;
 
     for (const int32_t elem : array_2)
         std::cout << elem << ", " << std::flush;
     std::cout << std::endl;
 
     array_3[4] = 50;
+    if (array_2 == array_3)
+        std::cout << "equal" << std::endl;
+
     print(1, 2, 3, "helo", array_3[3]);
 
     return 0;
