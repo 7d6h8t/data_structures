@@ -11,13 +11,19 @@ void print(printable auto const&... args) {
 }
 
 int main() {
-    std::array<int32_t, 5> std_array_1;
-    std::array<int32_t, 5> std_array_2{1, 2, 3, 4, 5};
+    ds::array<int32_t, 5> array_1;
+    ds::array<int32_t, 5> array_2{10, 20, 30, 40, 50};
+    ds::array<int32_t, 5> array_3{10, 20, 30, 40, 51};
 
-    ds::array<int32_t, 5> ds_array_1;
-    ds::array<int32_t, 5> ds_array_2{10, 20, 30, 40, 50};
+    if (array_2 == array_3)
+        std::cout << "same array" << std::endl;
 
-    print(1, 2, 3, "helo", ds_array_2[3]);
+    for (const int32_t elem : array_2)
+        std::cout << elem << ", " << std::flush;
+    std::cout << std::endl;
+
+    array_3[4] = 50;
+    print(1, 2, 3, "helo", array_3[3]);
 
     return 0;
 }
