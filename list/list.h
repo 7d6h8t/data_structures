@@ -27,23 +27,23 @@ namespace ds {
     private:
         using Node = node<T>;
         using value_type = T;
+        using size_type = std::size_t;
 
     public:
         template <typename... types>
         requires(std::same_as<T, types> && ...)
         list(const types&... args) : head_(new Node()), tail_(new Node()) {
+            link(head_, tail_);
+
             Node* prev = head_;
             ((link(prev, create_node(args)), prev = prev->next_), ...);
-            tail_->next_ = prev;
+            tail_->prev_ = prev;
         }
 
         ~list() {
-            Node* current = head_;
-            while (current != nullptr) {
-                Node* next = current->next_;
-                delete current;
-                current = next;
-            }
+            clear();
+            if (head_ != nullptr)
+                delete head_;
 
             if (tail_ != nullptr)
                 delete tail_;
@@ -60,11 +60,43 @@ namespace ds {
         }
 
         T& back() noexcept {
-            return tail_->next_->data_;
+            return tail_->prev_->data_;
         }
 
         const T& back() const noexcept {
-            return tail_->next_->data_;
+            return tail_->prev_->data_;
+        }
+
+        // capaticy
+        bool empty() const noexcept {
+            return (head_->next_ == tail_) && (tail_->prev_ == head_);
+        }
+
+        size_type size() const noexcept {
+            size_type node_count = 0;
+
+            if (empty())
+                return node_count;
+
+            Node* current = head_->next_;
+            while (current != nullptr) {
+                ++node_count;
+                current = current->next_;
+            }
+
+            return node_count;
+        }
+
+        // modifiers
+        void clear() noexcept {
+            Node* current = head_->next_;
+            while (current != nullptr) {
+                Node* next = current->next_;
+                delete current;
+                current = next;
+            }
+
+            link(head_, tail_);
         }
 
     private:
