@@ -12,6 +12,7 @@ namespace ds {
         friend class list<T>;
 
     public:
+        node() = default;
         node(const T& data) : data_(data), prev_(nullptr), next_(nullptr) {}
         ~node() = default;
 
@@ -29,9 +30,10 @@ namespace ds {
     public:
         template <typename... types>
         requires(std::same_as<T, types> && ...)
-        list(const types&... args) : head_(new Node(T())) {
+        list(const types&... args) : head_(new Node()), tail_(new Node()) {
             Node* prev = head_;
             ((link(prev, create_node(args)), prev = prev->next_), ...);
+            tail_->next_ = prev;
         }
 
         ~list() {
@@ -41,6 +43,9 @@ namespace ds {
                 delete current;
                 current = next;
             }
+
+            if (tail_ != nullptr)
+                delete tail_;
         }
 
         Node* create_node(const T& data) {
@@ -55,5 +60,6 @@ namespace ds {
 
     private:
         Node* head_;
+        Node* tail_;
     };
 } // namespace ds
