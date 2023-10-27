@@ -26,6 +26,7 @@ namespace ds {
     class list final {
     private:
         using Node = node<T>;
+        using value_type = T;
 
     public:
         template <typename... types>
@@ -48,6 +49,25 @@ namespace ds {
                 delete tail_;
         }
 
+    public:
+        // element access
+        T& front() noexcept {
+            return head_->next_->data_;
+        }
+
+        const T& front() const noexcept {
+            return head_->next_->data_;
+        }
+
+        T& back() noexcept {
+            return tail_->next_->data_;
+        }
+
+        const T& back() const noexcept {
+            return tail_->next_->data_;
+        }
+
+    private:
         Node* create_node(const T& data) {
             Node* new_node = new Node(data);
             return new_node;
