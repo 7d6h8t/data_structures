@@ -99,6 +99,18 @@ namespace ds {
             link(head_, tail_);
         }
 
+        void push_back(const T& data) {
+            Node* new_node = create_node(data);
+            link(tail_->prev_, new_node);
+            tail_->prev_ = new_node;
+        }
+
+        void push_back(T&& data) {
+            Node* new_node = create_node(data);
+            link(tail_->prev_, new_node);
+            tail_->prev_ = new_node;
+        }
+
     private:
         Node* create_node(const T& data) {
             Node* new_node = new Node(data);
