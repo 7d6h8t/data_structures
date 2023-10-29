@@ -111,6 +111,18 @@ namespace ds {
             tail_->prev_ = new_node;
         }
 
+        void push_front(const T& data) {
+            Node* new_node = create_node(data);
+            link(new_node, head_->next_);
+            head_->next_ = new_node;
+        }
+
+        void push_front(T&& data) {
+            Node* new_node = create_node(data);
+            link(new_node, head_->next_);
+            head_->next_ = new_node;
+        }
+
     private:
         Node* create_node(const T& data) {
             Node* new_node = new Node(data);
