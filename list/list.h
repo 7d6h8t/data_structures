@@ -13,13 +13,69 @@ namespace ds {
 
     public:
         node() = default;
-        node(const T& data) : data_(data), prev_(nullptr), next_(nullptr) {}
+        node(const T& value) : value_(value), prev_(nullptr), next_(nullptr) {}
         ~node() = default;
 
     private:
-        T data_;
+        T value_;
         node<T>* prev_;
         node<T>* next_;
+    };
+
+    template <typename T>
+    class list_iterator {
+    private:
+        using Node = node<T>;
+        using value_type = T;
+        using reference = T&;
+        using pointer = T*;
+        using self = list_iterator<T>;
+
+    public:
+        list_iterator() : node_() {}
+        list_iterator(const Node* node) : node_(node) {}
+
+    public:
+        reference operator*() {
+            return node_->value_;
+        }
+
+        pointer operator->() {
+            return node_->next_;
+        }
+
+        self& operator++() {
+            node_ = node_->next_;
+            return *this;
+        }
+
+        self operator++(int) {
+            self temp = *this;
+            node_ = node_->next_;
+            return temp;
+        }
+
+        self& operator--() {
+            node_ = node_->prev_;
+            return *this;
+        }
+
+        self operator--(int) {
+            self temp = *this;
+            node_ = node_->prev_;
+            return temp;
+        }
+
+        bool operator==(const self& rhs) const {
+            return node_ == rhs.node_;
+        }
+
+        bool operator!=(const self& rhs) const {
+            return node_ != rhs.node_;
+        }
+
+    public:
+        Node* node_;
     };
 
     template <typename T>
@@ -28,16 +84,15 @@ namespace ds {
         using Node = node<T>;
         using value_type = T;
         using size_type = std::size_t;
+        using iterator = list_iterator<T>;
 
     public:
         template <typename... types>
         requires(std::same_as<T, types> && ...)
-        list(const types&... args) : head_(new Node()), tail_(new Node()) {
-            link(head_, tail_);
-
-            Node* prev = head_;
+        list(const types&... args) : head_(new Node()) {
+            Node* prev = head_.node_;
             ((link(prev, create_node(args)), prev = prev->next_), ...);
-            tail_->prev_ = prev;
+            tail_.node_->prev = prev;
         }
 
         ~list() {
@@ -52,24 +107,37 @@ namespace ds {
     public:
         // element access
         T& front() noexcept {
-            return head_->next_->data_;
+            return *(begin());
         }
 
         const T& front() const noexcept {
-            return head_->next_->data_;
+            return *(begin());
         }
 
         T& back() noexcept {
-            return tail_->prev_->data_;
+            iterator temp = end();
+            --temp;
+            return *temp;
         }
 
         const T& back() const noexcept {
-            return tail_->prev_->data_;
+            iterator temp = end();
+            --temp;
+            return *temp;
+        }
+
+        // iterators
+        iterator begin() noexcept {
+            return iterator(head_.node_->next_);
+        }
+
+        iterator end() noexcept {
+            return iterator(head_.node_);
         }
 
         // capaticy
         bool empty() const noexcept {
-            return (head_->next_ == tail_) && (tail_->prev_ == head_);
+            return *begin() == nullptr;
         }
 
         size_type size() const noexcept {
@@ -89,53 +157,62 @@ namespace ds {
 
         // modifiers
         void clear() noexcept {
-            Node* current = head_->next_;
+            Node* current = begin().node_->next_;
             while (current != nullptr) {
                 Node* next = current->next_;
                 delete current;
                 current = next;
             }
 
-            link(head_, tail_);
+            head_.node_->next_ = nullptr;
         }
 
-        void push_back(const T& data) {
-            Node* new_node = create_node(data);
-            link(tail_->prev_, new_node);
-            tail_->prev_ = new_node;
+        iterator insert(iterator pos, const T& value) {
+            Node* next_node = pos.node_->next_;
+            unlink(pos.node_, next_node);
+
+            Node* new_node = create_node(value);
+            link(pos.node_, new_node);
+            link(new_node, next_node);
         }
 
-        void push_back(T&& data) {
-            Node* new_node = create_node(data);
-            link(tail_->prev_, new_node);
-            tail_->prev_ = new_node;
+        void push_back(const T& value) {
+            insert(end(), value);
         }
 
-        void push_front(const T& data) {
-            Node* new_node = create_node(data);
-            link(new_node, head_->next_);
-            head_->next_ = new_node;
+        void push_back(T&& value) {
+            insert(end(), std::move(value));
         }
 
-        void push_front(T&& data) {
-            Node* new_node = create_node(data);
-            link(new_node, head_->next_);
-            head_->next_ = new_node;
+        void push_front(const T& value) {
+            insert(begin(), value);
+        }
+
+        void push_front(T&& value) {
+            insert(begin(), std::move(value));
         }
 
     private:
-        Node* create_node(const T& data) {
-            Node* new_node = new Node(data);
+        Node* create_node(const T& value) {
+            Node* new_node = new Node(value);
             return new_node;
         }
 
         void link(Node* a, Node* b) const noexcept {
-            a->next_ = b;
-            b->prev_ = a;
+            if (a != nullptr)
+                a->next_ = b;
+            if (b != nullptr)
+                b->prev_ = a;
+        }
+
+        void unlink(Node* a, Node* b) const noexcept {
+            if (a != nullptr)
+                a->next_ = nullptr;
+            if (b != nullptr)
+                b->prev_ = nullptr;
         }
 
     private:
-        Node* head_;
-        Node* tail_;
+        iterator head_;
     };
 } // namespace ds
