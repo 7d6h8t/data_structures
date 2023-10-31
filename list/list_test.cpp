@@ -4,7 +4,7 @@
 #include <list>
 
 int main() {
-    std::list<int32_t> list_test{1, 2, 3, 4};
+    std::list<int32_t> list_test{1};
     std::list<int32_t>::iterator itr = list_test.begin();
     list_test.insert(itr, 0);
 

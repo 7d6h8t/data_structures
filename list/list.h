@@ -13,7 +13,7 @@ namespace ds {
         friend class list<T>;
 
     public:
-        node() = default;
+        node() : prev_(this), next_(this) {}
         node(const T& value) : value_(value), prev_(nullptr), next_(nullptr) {}
         ~node() = default;
 
@@ -91,18 +91,13 @@ namespace ds {
         template <typename... types>
         requires(std::same_as<T, types> && ...)
         list(const types&... args) : head_(new Node()) {
-            head_.Node* prev = head_.node_;
-            ((link(prev, create_node(args)), prev = prev->next_), ...);
-            tail_.node_->prev = prev;
+
+            Node* prev = head_.node_;
+            //((link(prev, create_node(args)), prev = prev->next_), ...);
         }
 
         ~list() {
             clear();
-            if (head_ != nullptr)
-                delete head_;
-
-            if (tail_ != nullptr)
-                delete tail_;
         }
 
     public:
