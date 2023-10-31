@@ -1,4 +1,5 @@
 #include <concepts>
+#include <utility>
 
 // forward declaration
 namespace ds {
@@ -90,7 +91,7 @@ namespace ds {
         template <typename... types>
         requires(std::same_as<T, types> && ...)
         list(const types&... args) : head_(new Node()) {
-            Node* prev = head_.node_;
+            head_.Node* prev = head_.node_;
             ((link(prev, create_node(args)), prev = prev->next_), ...);
             tail_.node_->prev = prev;
         }
@@ -168,12 +169,11 @@ namespace ds {
         }
 
         iterator insert(iterator pos, const T& value) {
-            Node* next_node = pos.node_->next_;
-            unlink(pos.node_, next_node);
-
             Node* new_node = create_node(value);
-            link(pos.node_, new_node);
-            link(new_node, next_node);
+            Node* prev_node = pos.node_->prev_;
+
+            link(prev_node, pos.node_);
+            link(new_node, pos.node_);
         }
 
         void push_back(const T& value) {
