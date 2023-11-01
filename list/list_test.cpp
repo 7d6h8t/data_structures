@@ -1,4 +1,4 @@
-// #include "list.h"
+#include "list.h"
 #include <iostream>
 #include <iterator>
 #include <list>
@@ -7,6 +7,8 @@ int main() {
     std::list<int32_t> list_test{1};
     std::list<int32_t>::iterator itr = list_test.begin();
     list_test.insert(itr, 0);
+
+    ds::list<int32_t> ds_list;
 
     // ds::list<int32_t> ds_list1{1, 2, 3, 4};
     // ds::list<int32_t> ds_list2;

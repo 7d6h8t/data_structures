@@ -34,7 +34,7 @@ namespace ds {
 
     public:
         list_iterator() : node_() {}
-        list_iterator(const Node* node) : node_(node) {}
+        list_iterator(Node* node) : node_(node) {}
 
     public:
         reference operator*() {
