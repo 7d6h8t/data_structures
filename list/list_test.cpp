@@ -17,8 +17,8 @@ int main() {
     ds_list1.push_back(5);
     std::cout << ds_list1.back() << std::endl;
     // std::cout << ds_list1.size() << std::endl;
-    ds_list1.clear();
-    // std::cout << std::boolalpha << ds_list1.empty() << std::endl;
+    // ds_list1.clear();
+    std::cout << std::boolalpha << ds_list1.empty() << std::endl;
     // std::cout << std::boolalpha << ds_list2.empty() << std::endl;
 
     for (const auto& elem : list_test)

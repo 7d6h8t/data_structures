@@ -90,6 +90,7 @@ namespace ds {
         using value_type = T;
         using size_type = std::size_t;
         using iterator = list_iterator<T>;
+        using const_iterator = const list_iterator<T>;
 
     public:
         template <typename... types>
@@ -132,13 +133,21 @@ namespace ds {
             return iterator(head_.node_->next_);
         }
 
+        const_iterator cbegin() const noexcept {
+            return iterator(head_.node_->next_);
+        }
+
         iterator end() noexcept {
+            return iterator(head_.node_);
+        }
+
+        const_iterator cend() const noexcept {
             return iterator(head_.node_);
         }
 
         // capaticy
         bool empty() const noexcept {
-            return begin() == end();
+            return cbegin() == cend();
         }
 
         size_type size() const noexcept {
