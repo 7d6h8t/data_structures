@@ -197,6 +197,14 @@ namespace ds {
             return iterator(next_node);
         }
 
+        void pop_back() {
+            erase(end());
+        }
+
+        void pop_front() {
+            erase(begin());
+        }
+
         void push_back(const T& value) {
             insert(end(), value);
         }

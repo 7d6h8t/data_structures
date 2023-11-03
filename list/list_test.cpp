@@ -24,8 +24,7 @@ int main() {
     std::cout << ds_list1.back() << std::endl;
     std::cout << ds_list1.size() << std::endl;
 
-    ds::list<int32_t>::iterator ds_itr = ds_list1.begin();
-    ds_list1.erase(++ds_itr);
+    ds_list1.pop_front();
     std::cout << "ds::list = " << std::flush;
     for (const auto& elem : ds_list1)
         std::cout << std::format("{} ", elem) << std::flush;
