@@ -150,7 +150,7 @@ namespace ds {
             return cbegin() == cend();
         }
 
-        size_type size() const noexcept {
+        size_type size() noexcept {
             size_type node_count = 0;
 
             iterator itr = begin();
