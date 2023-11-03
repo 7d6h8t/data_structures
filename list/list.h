@@ -5,12 +5,16 @@
 namespace ds {
     template <typename T>
     class list;
-}
+
+    template <typename T>
+    class list_iterator;
+} // namespace ds
 
 namespace ds {
     template <typename T>
     class node {
         friend class list<T>;
+        friend class list_iterator<T>;
 
     public:
         node() : prev_(this), next_(this) {}
@@ -91,13 +95,14 @@ namespace ds {
         template <typename... types>
         requires(std::same_as<T, types> && ...)
         list(const types&... args) : head_(new Node()) {
-
-            Node* prev = head_.node_;
-            //((link(prev, create_node(args)), prev = prev->next_), ...);
+            (push_back(args), ...);
         }
 
         ~list() {
             clear();
+
+            if (head_.node_ != nullptr)
+                delete head_.node_;
         }
 
     public:
@@ -133,19 +138,16 @@ namespace ds {
 
         // capaticy
         bool empty() const noexcept {
-            return *begin() == nullptr;
+            return begin() == end();
         }
 
         size_type size() const noexcept {
             size_type node_count = 0;
 
-            if (empty())
-                return node_count;
-
-            Node* current = head_->next_;
-            while (current != nullptr) {
+            iterator itr = begin();
+            while (itr != end()) {
                 ++node_count;
-                current = current->next_;
+                ++itr;
             }
 
             return node_count;
@@ -153,14 +155,15 @@ namespace ds {
 
         // modifiers
         void clear() noexcept {
-            Node* current = begin().node_->next_;
-            while (current != nullptr) {
-                Node* next = current->next_;
-                delete current;
-                current = next;
+            iterator itr = begin();
+            while (itr != end()) {
+                Node* temp = itr.node_;
+                ++itr;
+                delete temp;
             }
 
-            head_.node_->next_ = nullptr;
+            head_.node_->prev_ = head_.node_;
+            head_.node_->next_ = head_.node_;
         }
 
         iterator insert(iterator pos, const T& value) {
