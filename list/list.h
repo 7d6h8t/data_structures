@@ -87,6 +87,8 @@ namespace ds {
     class list final {
     private:
         using Node = node<T>;
+
+    public:
         using value_type = T;
         using size_type = std::size_t;
         using iterator = list_iterator<T>;
@@ -183,6 +185,16 @@ namespace ds {
             link(prev_node, new_node);
 
             return iterator(new_node);
+        }
+
+        iterator erase(iterator pos) {
+            Node* prev_node = pos.node_->prev_;
+            Node* next_node = pos.node_->next_;
+
+            link(prev_node, next_node);
+
+            delete pos.node_;
+            return iterator(next_node);
         }
 
         void push_back(const T& value) {

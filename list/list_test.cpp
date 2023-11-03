@@ -5,12 +5,13 @@
 #include <list>
 
 int main() {
-    std::list<int32_t> list_test{1};
+    std::list<int32_t> list_test{1, 3, 4};
     std::list<int32_t>::iterator itr = list_test.begin();
-    list_test.insert(itr, 0);
+    list_test.insert(++itr, 2);
 
+    std::cout << "std::list = " << std::flush;
     for (const auto& elem : list_test)
-        std::cout << elem << ", " << std::flush;
+        std::cout << std::format("{} ", elem) << std::flush;
     std::cout << std::endl;
 
     ds::list<int32_t> ds_list1{1, 2, 3, 4};
@@ -23,7 +24,10 @@ int main() {
     std::cout << ds_list1.back() << std::endl;
     std::cout << ds_list1.size() << std::endl;
 
+    ds::list<int32_t>::iterator ds_itr = ds_list1.begin();
+    ds_list1.erase(++ds_itr);
+    std::cout << "ds::list = " << std::flush;
     for (const auto& elem : ds_list1)
-        std::cout << std::format("{}, ", elem) << std::flush;
+        std::cout << std::format("{} ", elem) << std::flush;
     std::cout << std::endl;
 }
