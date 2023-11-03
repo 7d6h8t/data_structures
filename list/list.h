@@ -167,8 +167,10 @@ namespace ds {
             Node* new_node = create_node(value);
             Node* prev_node = pos.node_->prev_;
 
-            link(prev_node, pos.node_);
             link(new_node, pos.node_);
+            link(prev_node, new_node);
+
+            return iterator(new_node);
         }
 
         void push_back(const T& value) {
