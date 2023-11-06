@@ -8,6 +8,9 @@ namespace ds {
 
     template <typename T>
     class list_iterator;
+
+    template <typename T>
+    class list_const_iterator;
 } // namespace ds
 
 namespace ds {
@@ -15,6 +18,7 @@ namespace ds {
     class node {
         friend class list<T>;
         friend class list_iterator<T>;
+        friend class list_const_iterator<T>;
 
     public:
         node() : prev_(this), next_(this) {}
@@ -84,6 +88,62 @@ namespace ds {
     };
 
     template <typename T>
+    class list_const_iterator {
+    private:
+        using Node = const node<T>;
+        using value_type = T;
+        using reference = const T&;
+        using pointer = const T*;
+        using self = list_const_iterator<T>;
+
+    public:
+        list_const_iterator() : node_() {}
+        list_const_iterator(const Node* node) : node_(node) {}
+
+    public:
+        reference operator*() const {
+            return node_->value_;
+        }
+
+        pointer operator->() const {
+            return node_->next_;
+        }
+
+        self& operator++() {
+            node_ = node_->next_;
+            return *this;
+        }
+
+        self operator++(int) {
+            self temp = *this;
+            node_ = node_->next_;
+            return temp;
+        }
+
+        self& operator--() {
+            node_ = node_->prev_;
+            return *this;
+        }
+
+        self operator--(int) {
+            self temp = *this;
+            node_ = node_->prev_;
+            return temp;
+        }
+
+        bool operator==(const self& rhs) const {
+            return node_ == rhs.node_;
+        }
+
+        bool operator!=(const self& rhs) const {
+            return node_ != rhs.node_;
+        }
+
+    public:
+        const Node* node_;
+    };
+
+    template <typename T>
     class list final {
     private:
         using Node = node<T>;
@@ -92,12 +152,12 @@ namespace ds {
         using value_type = T;
         using size_type = std::size_t;
         using iterator = list_iterator<T>;
-        using const_iterator = const list_iterator<T>;
+        using const_iterator = list_const_iterator<T>;
 
     public:
         template <typename... types>
         requires(std::same_as<T, types> && ...)
-        list(const types&... args) : head_(new Node()) {
+        list(const types&... args) : head_(new Node()), size_(0) {
             (push_back(args), ...);
         }
 
@@ -135,33 +195,33 @@ namespace ds {
             return iterator(head_.node_->next_);
         }
 
+        const_iterator begin() const noexcept {
+            return const_iterator(head_.node_->next_);
+        }
+
         const_iterator cbegin() const noexcept {
-            return iterator(head_.node_->next_);
+            return const_iterator(head_.node_->next_);
         }
 
         iterator end() noexcept {
             return iterator(head_.node_);
         }
 
+        const_iterator end() const noexcept {
+            return const_iterator(head_.node_);
+        }
+
         const_iterator cend() const noexcept {
-            return iterator(head_.node_);
+            return const_iterator(head_.node_);
         }
 
         // capaticy
         bool empty() const noexcept {
-            return cbegin() == cend();
+            return size_ == 0;
         }
 
-        size_type size() noexcept {
-            size_type node_count = 0;
-
-            iterator itr = begin();
-            while (itr != end()) {
-                ++node_count;
-                ++itr;
-            }
-
-            return node_count;
+        size_type size() const noexcept {
+            return size_;
         }
 
         // modifiers
@@ -171,6 +231,7 @@ namespace ds {
                 Node* temp = itr.node_;
                 ++itr;
                 delete temp;
+                --size_;
             }
 
             head_.node_->prev_ = head_.node_;
@@ -184,6 +245,7 @@ namespace ds {
             link(new_node, pos.node_);
             link(prev_node, new_node);
 
+            ++size_;
             return iterator(new_node);
         }
 
@@ -194,6 +256,8 @@ namespace ds {
             link(prev_node, next_node);
 
             delete pos.node_;
+
+            --size_;
             return iterator(next_node);
         }
 
@@ -243,5 +307,27 @@ namespace ds {
 
     private:
         iterator head_;
+        size_type size_;
     };
+
+    template <typename T>
+    bool operator==(const list<T>& a, const list<T>& b) {
+        if (a.size() != b.size())
+            return false;
+
+        using const_iterator = list<T>::const_iterator;
+
+        const_iterator itr_a = a.begin();
+        const_iterator itr_b = b.begin();
+
+        const_iterator a_end = a.end();
+        const_iterator b_end = b.end();
+
+        while (itr_a != a_end && itr_b != b_end && *itr_a == *itr_b) {
+            ++itr_a;
+            ++itr_b;
+        }
+
+        return (itr_a == a_end) && (itr_b == b_end);
+    }
 } // namespace ds
