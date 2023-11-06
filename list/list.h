@@ -1,3 +1,4 @@
+#include <compare>
 #include <concepts>
 #include <utility>
 
@@ -329,5 +330,30 @@ namespace ds {
         }
 
         return (itr_a == a_end) && (itr_b == b_end);
+    }
+
+    template <typename T>
+    std::weak_ordering operator<=>(const list<T>& lhs, const list<T>& rhs) {
+        if (lhs.size() < rhs.size())
+            return std::weak_ordering::less;
+
+        if (lhs.size() > rhs.size())
+            return std::weak_ordering::greater;
+
+        auto lhs_itr = lhs.begin();
+        auto rhs_itr = rhs.begin();
+
+        while (lhs_itr != lhs.end()) {
+            if (*lhs_itr < *rhs_itr)
+                return std::weak_ordering::less;
+
+            if (*lhs_itr > *rhs_itr)
+                return std::weak_ordering::greater;
+
+            ++lhs_itr;
+            ++rhs_itr;
+        }
+
+        return std::weak_ordering::equivalent;
     }
 } // namespace ds
