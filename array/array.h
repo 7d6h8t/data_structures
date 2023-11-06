@@ -111,23 +111,23 @@ namespace ds {
     };
 
     template <typename T, std::size_t size>
-    std::strong_ordering operator<=>(const ds::array<T, size>& lhs,
-                                     const ds::array<T, size>& rhs) noexcept {
+    std::weak_ordering operator<=>(const ds::array<T, size>& lhs,
+                                   const ds::array<T, size>& rhs) noexcept {
         if (lhs.size() < rhs.size())
-            return std::strong_ordering::less;
+            return std::weak_ordering::less;
 
         if (lhs.size() > rhs.size())
-            return std::strong_ordering::greater;
+            return std::weak_ordering::greater;
 
         for (std::size_t i = 0; i < lhs.size(); ++i) {
             if (lhs[i] < rhs[i])
-                return std::strong_ordering::less;
+                return std::weak_ordering::less;
 
             if (lhs[i] > rhs[i])
-                return std::strong_ordering::greater;
+                return std::weak_ordering::greater;
         }
 
-        return std::strong_ordering::equal;
+        return std::weak_ordering::equivalent;
     }
 
     template <typename T, std::size_t size>

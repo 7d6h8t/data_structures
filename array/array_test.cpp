@@ -18,13 +18,13 @@ int main() {
     if (array_2 == array_3)
         std::cout << "equal" << std::endl;
 
-    if ((array_2 <=> array_3) == std::strong_ordering::less)
+    if ((array_2 <=> array_3) == std::weak_ordering::less)
         std::cout << "less" << std::endl;
 
-    if ((array_2 <=> array_3) == std::strong_ordering::greater)
+    if ((array_2 <=> array_3) == std::weak_ordering::greater)
         std::cout << "greater" << std::endl;
 
-    if ((array_2 <=> array_3) == std::strong_ordering::equal)
+    if ((array_2 <=> array_3) == std::weak_ordering::equivalent)
         std::cout << "equal" << std::endl;
 
     for (const int32_t elem : array_2)
