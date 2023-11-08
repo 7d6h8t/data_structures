@@ -6,6 +6,9 @@ namespace ds {
     public:
         using value_type = T;
         using size_type = std::size_t;
+        using pointer = T*;
+        using reference = T&;
+        using const_reference = const T&;
 
     public:
         template <typename... types>
@@ -23,6 +26,15 @@ namespace ds {
                 delete[] value_;
                 value_ = nullptr;
             }
+        }
+
+    public:
+        reference at(const size_type pos) {
+            return *(value_ + pos);
+        }
+
+        const_reference at(const size_type pos) const {
+            return *(value_ + pos);
         }
 
     private:
