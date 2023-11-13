@@ -13,7 +13,7 @@ namespace ds {
     public:
         template <typename... types>
         requires(std::same_as<T, types> && ...)
-        vector(const types... args) {
+        vector(const types&... args) {
             size_ = sizeof...(args);
             capaticy_ = size_;
             value_ = new T[size_];
@@ -35,6 +35,15 @@ namespace ds {
 
         const_reference at(const size_type pos) const {
             return *(value_ + pos);
+        }
+
+        // capacity
+        void reserve(const size_type new_cap) {
+            capaticy_ = new_cap;
+        }
+
+        size_type capacity() const {
+            return capaticy_;
         }
 
     private:
