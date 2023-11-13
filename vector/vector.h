@@ -39,6 +39,9 @@ namespace ds {
 
         // capacity
         void reserve(const size_type new_cap) {
+            if (new_cap <= capacity_)
+                return;
+
             capacity_ = new_cap;
         }
 
