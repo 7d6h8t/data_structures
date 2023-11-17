@@ -29,12 +29,21 @@ namespace ds {
         }
 
     public:
+        // element access
         reference at(const size_type pos) {
             return *(head_ + pos);
         }
 
         const_reference at(const size_type pos) const {
             return *(head_ + pos);
+        }
+
+        reference operator[](const size_type pos) {
+            return at(pos);
+        }
+
+        const_reference operator[](const size_type pos) {
+            return at(pos);
         }
 
         // capacity
