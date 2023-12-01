@@ -3,15 +3,15 @@
 #include <vector>
 
 int main() {
-    std::vector<int32_t> vector_test{1, 2, 3, 4, 5};
+  std::vector<int32_t> vector_test{1, 2, 3, 4, 5};
 
-    for (const auto& elem : vector_test)
-        std::cout << elem << " " << std::flush;
-    std::cout << std::endl;
+  for (const auto& elem : vector_test)
+    std::cout << elem << " " << std::flush;
+  std::cout << std::endl;
 
-    ds::vector<int32_t> ds_vector1{1, 2, 3, 4, 5};
+  ds::vector<int32_t> ds_vector1{1, 2, 3, 4, 5};
 
-    std::cout << ds_vector1.at(3) << std::flush;
+  std::cout << ds_vector1.at(3) << std::flush;
 
-    return 0;
+  return 0;
 }
