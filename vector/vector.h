@@ -12,10 +12,10 @@ class vector {
 
  public:
   template <typename... types>
-  requires(std::same_as<T, types>&&...) vector(const types&... args) {
-    size_ = sizeof...(args);
-    capacity_ = size_;
-    alloc();
+  requires(std::same_as<T, types>&&...) vector(const types&... args)
+      : size_(0), capacity_(0) {
+    reserve(sizeof...(args));
+    (push_back(args), ...);
   }
 
   ~vector() {
@@ -48,6 +48,14 @@ class vector {
   }
 
   size_type capacity() const { return capacity_; }
+
+  // modifiers
+  void push_back(const value_type& value) {
+    if (size_ > capacity_)
+      realloc(capacity_ * 2);
+
+    head_[size_++] = value;
+  }
 
  private:
   void alloc() {

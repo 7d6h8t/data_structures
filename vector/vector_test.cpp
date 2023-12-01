@@ -11,7 +11,7 @@ int main() {
 
   ds::vector<int32_t> ds_vector1{1, 2, 3, 4, 5};
 
-  std::cout << ds_vector1.at(3) << std::flush;
+  std::cout << ds_vector1[2] << std::flush;
 
   return 0;
 }
