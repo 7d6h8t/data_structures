@@ -35,7 +35,7 @@ class vector {
 
   reference operator[](const size_type pos) { return at(pos); }
 
-  const_reference operator[](const size_type pos) { return at(pos); }
+  const_reference operator[](const size_type pos) const { return at(pos); }
 
   // capacity
   void reserve(const size_type new_cap) {
