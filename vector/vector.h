@@ -39,10 +39,8 @@ class vector {
 
   // capacity
   void reserve(const size_type new_cap) {
-    if (new_cap <= capacity_)
-      return;
-
-    capacity_ = new_cap;
+    if (new_cap > capacity_)
+      realloc(new_cap);
   }
 
   size_type capacity() const { return capacity_; }
@@ -55,9 +53,8 @@ class vector {
     head_ = new value_type[capacity_];
   }
 
-  void realloc() {
-    capacity_ *= 2;
-
+  void realloc(const size_type& n) {
+    capacity_ = n;
     value_type* temp = new value_type[capacity_];
 
     for (size_type i = 0; i < size_; ++i)
