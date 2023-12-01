@@ -51,7 +51,7 @@ class vector {
 
   // modifiers
   void push_back(const value_type& value) {
-    if (size_ > capacity_)
+    if (size_ >= capacity_)
       realloc(capacity_ * 2);
 
     head_[size_++] = value;

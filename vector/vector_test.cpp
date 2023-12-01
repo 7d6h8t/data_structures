@@ -13,5 +13,11 @@ int main() {
 
   std::cout << ds_vector1[2] << std::flush;
 
+  ds_vector1.push_back(6);
+  ds_vector1.push_back(7);
+  ds_vector1.push_back(8);
+
+  std::cout << ds_vector1[6] << std::flush;
+
   return 0;
 }
