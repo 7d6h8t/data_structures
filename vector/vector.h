@@ -12,7 +12,7 @@ class vector_iterator {
 
  public:
   vector_iterator() noexcept : current_() {}
-  vector_iterator(const T& i) noexcept : current_(i) {}
+  vector_iterator(const pointer p) noexcept : current_(p) {}
   vector_iterator(const vector_iterator& rhs) noexcept : current_(rhs.base()) {}
 
  public:
@@ -54,7 +54,7 @@ class vector_iterator {
 
   bool operator!=(const self& rhs) const { return !(*this == rhs); }
 
-  const reference& base() const noexcept { return current_; }
+  const pointer& base() const noexcept { return current_; }
 
  private:
   pointer current_;
@@ -82,9 +82,8 @@ class vector {
   ~vector() {
     size_ = 0;
     capacity_ = 0;
-    if (head_ != nullptr) {
-      delete[] head_;
-      head_ = nullptr;
+    if (head_.base() != nullptr) {
+      delete[] head_.base();
     }
   }
 
@@ -121,12 +120,12 @@ class vector {
  private:
   void realloc(const size_type& n) {
     capacity_ = n;
-    value_type* temp = new value_type[capacity_];
+    iterator temp(new value_type[capacity_]);
 
     for (size_type i = 0; i < size_; ++i)
       temp[i] = head_[i];
 
-    delete[] head_;
+    delete[] head_.base();
     head_ = temp;
   }
 
