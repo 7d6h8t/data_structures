@@ -38,6 +38,10 @@ class vector {
   const_reference operator[](const size_type pos) const { return at(pos); }
 
   // capacity
+  bool empty() const noexcept { return size_ == 0; }
+
+  bool size() const noexcept { return size_; }
+
   void reserve(const size_type new_cap) {
     if (new_cap > capacity_)
       realloc(new_cap);
