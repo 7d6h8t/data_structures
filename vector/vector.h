@@ -12,6 +12,7 @@ class vector_iterator {
  public:
   vector_iterator() noexcept : current_() {}
   vector_iterator(const T& i) noexcept : current_(i) {}
+  vector_iterator(const vector_iterator& rhs) noexcept : current_(rhs.base()) {}
 
  public:
   reference operator*() { return *current_; }
@@ -50,6 +51,8 @@ class vector {
   using pointer = T*;
   using reference = T&;
   using const_reference = const T&;
+  using iterator = vector_iterator<T>;
+  using const_iterator = const iterator;
 
  public:
   template <typename... types>
