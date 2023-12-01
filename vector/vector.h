@@ -15,7 +15,7 @@ class vector {
   requires(std::same_as<T, types>&&...) vector(const types&... args) {
     size_ = sizeof...(args);
     capacity_ = size_;
-    head_ = new T[size_];
+    alloc();
   }
 
   ~vector() {
@@ -48,6 +48,13 @@ class vector {
   size_type capacity() const { return capacity_; }
 
  private:
+  void alloc() {
+    if (head_ != nullptr || capacity_ == 0)
+      return;
+
+    head_ = new value_type[capacity_];
+  }
+
   void realloc() {
     capacity_ *= 2;
 
