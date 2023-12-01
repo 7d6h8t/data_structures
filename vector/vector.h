@@ -2,6 +2,47 @@
 
 namespace ds {
 template <typename T>
+class vector_iterator {
+ private:
+  using value_type = T;
+  using reference = T&;
+  using pointer = T*;
+  using self = vector_iterator<T>;
+
+ public:
+  vector_iterator() noexcept : current_() {}
+  vector_iterator(const T& i) noexcept : current_(i) {}
+
+ public:
+  reference operator*() { return *current_; }
+
+  pointer operator->() { return current_; }
+
+  self& operator++() {
+    ++current_;
+    return *this;
+  }
+
+  self operator++(int) { return vector_iterator(current_++); }
+
+  self& operator--() {
+    --current_;
+    return *this;
+  }
+
+  self operator--(int) { return vector_iterator(current_--); }
+
+  bool operator==(const self& rhs) const { return current_ == rhs.base(); }
+
+  bool operator!=(const self& rhs) const { return !(*this == rhs); }
+
+  const reference& base() const noexcept { return current_; }
+
+ private:
+  pointer current_;
+};
+
+template <typename T>
 class vector {
  public:
   using value_type = T;
