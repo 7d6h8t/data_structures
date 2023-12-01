@@ -5,6 +5,7 @@ template <typename T>
 class vector_iterator {
  private:
   using value_type = T;
+  using size_type = std::size_t;
   using reference = T&;
   using pointer = T*;
   using self = vector_iterator<T>;
@@ -24,14 +25,30 @@ class vector_iterator {
     return *this;
   }
 
-  self operator++(int) { return vector_iterator(current_++); }
+  self operator++(int) { return self(current_++); }
 
   self& operator--() {
     --current_;
     return *this;
   }
 
-  self operator--(int) { return vector_iterator(current_--); }
+  self operator--(int) { return self(current_--); }
+
+  reference operator[](const size_type n) { return current_[n]; }
+
+  self& operator+=(const size_type n) {
+    current_ += n;
+    return *this;
+  }
+
+  self operator+(const size_type n) { return self(current_ + n); }
+
+  self& operator-=(const size_type n) {
+    current_ -= n;
+    return *this;
+  }
+
+  self operator-(const size_type n) { return self(current_ - n); }
 
   bool operator==(const self& rhs) const { return current_ == rhs.base(); }
 
@@ -102,13 +119,6 @@ class vector {
   }
 
  private:
-  void alloc() {
-    if (head_ != nullptr || capacity_ == 0)
-      return;
-
-    head_ = new value_type[capacity_];
-  }
-
   void realloc(const size_type& n) {
     capacity_ = n;
     value_type* temp = new value_type[capacity_];
@@ -123,6 +133,6 @@ class vector {
  private:
   size_type size_;
   size_type capacity_;
-  value_type* head_;
+  iterator head_;
 };
 }  // namespace ds
