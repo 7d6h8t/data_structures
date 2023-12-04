@@ -120,10 +120,7 @@ class vector {
 
   // modifiers
   iterator insert(const_iterator pos, const value_type& value) {
-    size_type index = 0;
-    for (iterator itr = begin(); itr != pos; ++itr) {
-      ++index;
-    }
+    size_type index = pos.base() - head_.base();
 
     if (size_ >= capacity_)
       reserve(capacity_ * 2);
@@ -135,6 +132,14 @@ class vector {
 
     *new_pos = value;
     ++size_;
+    return new_pos;
+  }
+
+  iterator erase(const_iterator pos) {
+    for (iterator itr = pos; itr != end(); ++itr)
+      *itr = *(itr + 1);
+
+    --size_;
     return pos;
   }
 

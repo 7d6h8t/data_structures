@@ -20,6 +20,10 @@ int main() {
 
   ds_vector1.insert(ds_vector1.begin() + 2, 11);
 
+  ds_vector1.erase(ds_vector1.begin() + 2);
+
+  ds_vector1.erase(ds_vector1.begin() + 2);
+
   for (const auto& elem : ds_vector1)
     std::cout << elem << " " << std::flush;
   std::cout << std::endl;
