@@ -21,6 +21,8 @@ class stack final {
   size_type size() const { return container.size(); }
 
   // modifiers
+  void push(const value_type& value) { container.push_back(value); }
+
   void pop() { container.pop_back(); }
 
  private:
