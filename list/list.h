@@ -231,7 +231,7 @@ class list final {
     return iterator(next_node);
   }
 
-  void pop_back() { erase(end()); }
+  void pop_back() { erase(--end()); }
 
   void pop_front() { erase(begin()); }
 
