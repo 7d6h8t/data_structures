@@ -97,6 +97,15 @@ class vector {
 
   const_reference operator[](const size_type pos) const { return at(pos); }
 
+  // iterators
+  iterator begin() noexcept { return head_; }
+
+  const_iterator cbgin() const noexcept { return head_; }
+
+  iterator end() noexcept { return iterator(head_ + size_); }
+
+  const_iterator cend() const noexcept { return const_iterator(head_ + size_); }
+
   // capacity
   bool empty() const noexcept { return size_ == 0; }
 
@@ -110,12 +119,26 @@ class vector {
   size_type capacity() const { return capacity_; }
 
   // modifiers
-  void push_back(const value_type& value) {
-    if (size_ >= capacity_)
-      realloc(capacity_ * 2);
+  iterator insert(const_iterator pos, const value_type& value) {
+    size_type index = 0;
+    for (iterator itr = begin(); itr != pos; ++itr) {
+      ++index;
+    }
 
-    head_[size_++] = value;
+    if (size_ >= capacity_)
+      reserve(capacity_ * 2);
+
+    iterator new_pos = begin() + index;
+
+    for (iterator itr = end(); itr != new_pos; --itr)
+      *itr = *(itr - 1);
+
+    *new_pos = value;
+    ++size_;
+    return pos;
   }
+
+  void push_back(const value_type& value) { insert(end(), value); }
 
  private:
   void realloc(const size_type& n) {
