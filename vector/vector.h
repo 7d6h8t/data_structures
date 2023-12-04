@@ -97,6 +97,14 @@ class vector {
 
   const_reference operator[](const size_type pos) const { return at(pos); }
 
+  reference front() { return *head_; }
+
+  const_reference front() const { return *head_; }
+
+  reference back() { return *(head_ + size_); }
+
+  const_reference back() const { return *(head_ + size_); }
+
   // iterators
   iterator begin() noexcept { return head_; }
 
