@@ -18,5 +18,11 @@ int main() {
 
   ds::stack<int32_t> ds_stack;
 
+  while (!ds_stack.empty()) {
+    std::cout << ds_stack.top() << std::flush;
+    ds_stack.pop();
+  }
+  std::cout << std::endl;
+
   return 0;
 }
