@@ -22,7 +22,7 @@ int main() {
 
   ds_vector1.erase(ds_vector1.begin() + 2);
 
-  ds_vector1.erase(ds_vector1.begin() + 2);
+  ds_vector1.pop_back();
 
   for (const auto& elem : ds_vector1)
     std::cout << elem << " " << std::flush;

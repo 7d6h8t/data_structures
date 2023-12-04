@@ -144,6 +144,7 @@ class vector {
   }
 
   void push_back(const value_type& value) { insert(end(), value); }
+  void pop_back() { erase(end()); }
 
  private:
   void realloc(const size_type& n) {
