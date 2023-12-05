@@ -16,8 +16,7 @@ namespace ds {
 
 namespace ds {
   template <typename T>
-  class node
-  {
+  class node {
     friend class list<T>;
     friend class list_iterator<T>;
     friend class list_const_iterator<T>;
@@ -34,8 +33,7 @@ namespace ds {
   };
 
   template <typename T>
-  class list_iterator
-  {
+  class list_iterator {
   private:
     using Node = node<T>;
     using value_type = T;
@@ -99,8 +97,7 @@ namespace ds {
   };
 
   template <typename T>
-  class list_const_iterator
-  {
+  class list_const_iterator {
   private:
     using Node = const node<T>;
     using value_type = T;
@@ -164,8 +161,7 @@ namespace ds {
   };
 
   template <typename T>
-  class list final
-  {
+  class list final {
   private:
     using Node = node<T>;
 
