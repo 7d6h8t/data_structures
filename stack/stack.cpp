@@ -2,7 +2,8 @@
 #include <iostream>
 #include <stack>
 
-int main() {
+int main()
+{
   std::stack<int32_t> std_stack;
   std_stack.push(0);
   std_stack.push(1);

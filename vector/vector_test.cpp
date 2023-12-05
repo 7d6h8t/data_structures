@@ -2,11 +2,12 @@
 #include <iostream>
 #include <vector>
 
-int main() {
+int main()
+{
   std::vector<int32_t> vector_test{1, 2, 3, 4, 5};
   vector_test.insert(vector_test.begin(), 10);
 
-  for (const auto& elem : vector_test)
+  for (const auto &elem : vector_test)
     std::cout << elem << " " << std::flush;
   std::cout << std::endl;
 
@@ -24,7 +25,7 @@ int main() {
 
   ds_vector1.pop_back();
 
-  for (const auto& elem : ds_vector1)
+  for (const auto &elem : ds_vector1)
     std::cout << elem << " " << std::flush;
   std::cout << std::endl;
 

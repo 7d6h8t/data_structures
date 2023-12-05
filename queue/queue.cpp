@@ -2,7 +2,8 @@
 #include <iostream>
 #include <queue>
 
-int main() {
+int main()
+{
   std::queue<int32_t> std_queue;
   std_queue.push(0);
   std_queue.push(1);
