@@ -121,7 +121,43 @@ namespace ds {
     };
 
   public:
-    list() {}
+    list()
+    {
+      init();
+    }
+
+    list(const list &rhs)
+    {
+      init();
+    }
+
+    list(list &&rhs)
+        : size_(std::move(rhs.size_)), head_(std::move(rhs.head_)),
+          tail_(std::move(rhs.tail_))
+    {
+    }
+
+    ~list() {}
+
+    iterator begin()
+    {
+      return iterator(head_->next_);
+    }
+
+    const_iterator cbegin() const
+    {
+      return const_iterator(head_->next_);
+    }
+
+    iterator end()
+    {
+      return iterator(tail_);
+    }
+
+    const_iterator cend() const
+    {
+      return const_iterator(tail_);
+    }
 
   private:
     void init()
