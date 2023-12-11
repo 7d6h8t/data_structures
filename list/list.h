@@ -1,3 +1,6 @@
+#ifndef LIST_H
+#define LIST_H
+
 #include <compare>
 #include <concepts>
 #include <utility>
@@ -402,3 +405,5 @@ namespace ds {
     return std::weak_ordering::equivalent;
   }
 } // namespace ds
+
+#endif
