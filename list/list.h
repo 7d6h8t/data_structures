@@ -119,6 +119,24 @@ namespace ds {
         return temp;
       }
     };
+
+  public:
+    list() {}
+
+  private:
+    void init()
+    {
+      size_ = 0;
+      head_ = new node();
+      tail_ = new node();
+      head_->next_ = tail_;
+      tail_->prev_ = head_;
+    }
+
+  private:
+    int32_t size_;
+    node *head_;
+    node *tail_;
   };
 } // namespace ds
 #endif
