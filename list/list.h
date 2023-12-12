@@ -18,11 +18,6 @@ namespace ds {
       {
       }
 
-      node(const T&& elem = T{}, node* next = nullptr, node* prev = nullptr)
-          : elem_(std::move(elem)), next_(next), prev_(prev)
-      {
-      }
-
     private:
       T elem_;
       node* next_;
