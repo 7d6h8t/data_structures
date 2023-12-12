@@ -11,19 +11,12 @@ int main()
   list_test.insert(++itr, 2);
 
   std::cout << "std::list = " << std::flush;
-  for (const auto &elem : list_test)
+  for (const auto& elem : list_test)
     std::cout << std::format("{} ", elem) << std::flush;
   std::cout << std::endl;
 
   ds::list<int32_t> ds_list1{1, 2, 3};
   ds::list<int32_t> ds_list2{1, 2, 3, 4};
-
-  if (std::weak_ordering::less == (ds_list1 <=> ds_list2))
-    std::cout << "ds_list1 < ds_list2 " << std::endl;
-  if (std::weak_ordering::greater == (ds_list1 <=> ds_list2))
-    std::cout << "ds_list1 > ds_list2 " << std::endl;
-  if (std::weak_ordering::equivalent == (ds_list1 <=> ds_list2))
-    std::cout << "ds_list1 == ds_list2 " << std::endl;
 
   std::cout << ds_list1.front() << std::endl;
   std::cout << ds_list1.back() << std::endl;
@@ -34,7 +27,7 @@ int main()
 
   ds_list1.pop_front();
   std::cout << "ds::list = " << std::flush;
-  for (const auto &elem : ds_list1)
+  for (const auto& elem : ds_list1)
     std::cout << std::format("{} ", elem) << std::flush;
   std::cout << std::endl;
 }

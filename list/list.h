@@ -1,11 +1,19 @@
 #ifndef LIST_H
 #define LIST_H
 
+#include <concepts>
+#include <cstdint>
+#include <utility>
+
 namespace ds {
   template <typename T>
   class list final {
   private:
     class node final {
+      friend class list<T>;
+      friend class const_iterator;
+      friend class iterator;
+
     public:
       node(const T& elem = T{}, node* next = nullptr, node* prev = nullptr)
           : elem_(elem), next_(next), prev_(prev)
@@ -33,7 +41,7 @@ namespace ds {
 
       const T& operator*() const
       {
-        return curr_->elem_;
+        return retrieve();
       }
 
       const_iterator& operator++()
@@ -59,7 +67,7 @@ namespace ds {
       {
         const_iterator temp = *this;
         --(*this);
-        return tmep;
+        return temp;
       }
 
       bool operator==(const const_iterator& rhs) const
@@ -70,6 +78,12 @@ namespace ds {
       bool operator!=(const const_iterator& rhs) const
       {
         return (curr_ != rhs.curr_);
+      }
+
+    protected:
+      T& retrieve() const
+      {
+        return curr_->elem_;
       }
 
     protected:
@@ -85,7 +99,7 @@ namespace ds {
 
       T& operator*()
       {
-        return curr_->elem_;
+        return const_iterator::retrieve();
       }
 
       const T& operator*() const
@@ -95,7 +109,7 @@ namespace ds {
 
       iterator& operator++()
       {
-        curr_ = curr_->next_;
+        this->curr_ = this->curr_->next_;
         return *this;
       }
 
@@ -108,7 +122,7 @@ namespace ds {
 
       iterator& operator--()
       {
-        curr_ = curr_->prev_;
+        this->curr_ = this->curr_->prev_;
         return *this;
       }
 
@@ -124,6 +138,14 @@ namespace ds {
     list()
     {
       init();
+    }
+
+    template <typename... types>
+      requires(std::same_as<T, types> && ...)
+    list(const types&... args)
+    {
+      init();
+      (push_back(args), ...);
     }
 
     list(const list& rhs)
