@@ -11,8 +11,6 @@ namespace ds {
   private:
     class node final {
       friend class list<T>;
-      friend class const_iterator;
-      friend class iterator;
 
     public:
       node(const T& elem = T{}, node* next = nullptr, node* prev = nullptr)
@@ -29,10 +27,12 @@ namespace ds {
       T elem_;
       node* next_;
       node* prev_;
-    };
+    }; // node
 
   public:
     class const_iterator {
+      friend class list<T>;
+
     protected:
       const_iterator(node* p) : curr_(p) {}
 
@@ -88,9 +88,11 @@ namespace ds {
 
     protected:
       node* curr_;
-    };
+    }; // const_iterator
 
     class iterator : public const_iterator {
+      friend class list<T>;
+
     protected:
       iterator(node* p) : const_iterator(p) {}
 
@@ -132,7 +134,7 @@ namespace ds {
         --(*this);
         return temp;
       }
-    };
+    }; // iterator
 
   public:
     list()
@@ -314,6 +316,6 @@ namespace ds {
     uint32_t size_;
     node* head_;
     node* tail_;
-  };
+  }; // list
 } // namespace ds
 #endif
