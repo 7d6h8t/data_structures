@@ -149,6 +149,26 @@ namespace ds {
       delete tail_;
     }
 
+    list &operator=(const list &rhs)
+    {
+      clear();
+
+      for (const auto &elem : rhs)
+        push_back(elem);
+
+      return *this;
+    }
+
+    list &operator=(list &&rhs)
+    {
+      clear();
+
+      for (const auto &elem : rhs)
+        push_back(std::move(elem));
+
+      return *this;
+    }
+
     iterator begin()
     {
       return iterator(head_->next_);
