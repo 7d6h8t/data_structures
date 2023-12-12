@@ -159,6 +159,39 @@ namespace ds {
       return const_iterator(tail_);
     }
 
+    uint32_t size() const
+    {
+      return size_;
+    }
+
+    bool empty() const
+    {
+      return size_ == 0;
+    }
+
+    iterator insert(const_iterator pos, const T &elem)
+    {
+      node *curr = pos.curr_;
+      node *new_node = new node(elem, curr, curr->prev_);
+
+      curr->prev_->next_ = new_node;
+      curr->prev_ = new_node;
+      ++size_;
+      return iterator(new_node);
+    }
+
+    iterator erase(const_iterator pos)
+    {
+      node *curr = pos.curr_;
+      iterator return_itr(curr->next_);
+
+      curr->prev_->next_ = curr->next_;
+      curr->next_->prev_ = curr->prev_;
+      delete curr;
+      --size_;
+      return return_itr;
+    }
+
   private:
     void init()
     {
@@ -170,7 +203,7 @@ namespace ds {
     }
 
   private:
-    int32_t size_;
+    uint32_t size_;
     node *head_;
     node *tail_;
   };
