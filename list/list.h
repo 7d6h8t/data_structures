@@ -169,6 +169,32 @@ namespace ds {
       return size_ == 0;
     }
 
+    void clear()
+    {
+      while (!empty())
+        pop_front();
+    }
+
+    T &front()
+    {
+      return (*begin());
+    }
+
+    const T &front() const
+    {
+      return (*cbegin());
+    }
+
+    T &back()
+    {
+      return (*--end());
+    }
+
+    const T &back() const
+    {
+      return (*--cend());
+    }
+
     void push_front(const T &elem)
     {
       insert(cbegin(), elem);
