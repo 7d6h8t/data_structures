@@ -129,14 +129,17 @@ namespace ds {
     list(const list &rhs)
     {
       init();
+
       for (const auto &elem : rhs)
         push_back(elem);
     }
 
     list(list &&rhs)
-        : size_(std::move(rhs.size_)), head_(std::move(rhs.head_)),
-          tail_(std::move(rhs.tail_))
     {
+      init();
+
+      for (const auto &elem : rhs)
+        push_back(std::move(elem));
     }
 
     ~list()
