@@ -169,6 +169,36 @@ namespace ds {
       return size_ == 0;
     }
 
+    void push_front(const T &elem)
+    {
+      insert(cbegin(), elem);
+    }
+
+    void push_front(T &&elem)
+    {
+      insert(cbegin(), std::move(elem));
+    }
+
+    void push_back(const T &elem)
+    {
+      insert(cend(), elem);
+    }
+
+    void push_back(T &&elem)
+    {
+      insert(cend(), std::move(elem));
+    }
+
+    void pop_front()
+    {
+      erase(begin());
+    }
+
+    void pop_back()
+    {
+      erase(--end());
+    }
+
     iterator insert(const_iterator pos, const T &elem)
     {
       node *curr = pos.curr_;
