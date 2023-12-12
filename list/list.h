@@ -129,6 +129,8 @@ namespace ds {
     list(const list &rhs)
     {
       init();
+      for (const auto &elem : rhs)
+        push_back(elem);
     }
 
     list(list &&rhs)
@@ -137,7 +139,12 @@ namespace ds {
     {
     }
 
-    ~list() {}
+    ~list()
+    {
+      clear();
+      delete head_;
+      delete tail_;
+    }
 
     iterator begin()
     {
