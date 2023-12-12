@@ -7,36 +7,36 @@ namespace ds {
   private:
     class node final {
     public:
-      node(const T &elem = T{}, node *next = nullptr, node *prev = nullptr)
+      node(const T& elem = T{}, node* next = nullptr, node* prev = nullptr)
           : elem_(elem), next_(next), prev_(prev)
       {
       }
 
-      node(const T &&elem = T{}, node *next = nullptr, node *prev = nullptr)
+      node(const T&& elem = T{}, node* next = nullptr, node* prev = nullptr)
           : elem_(std::move(elem)), next_(next), prev_(prev)
       {
       }
 
     private:
       T elem_;
-      node *next_;
-      node *prev_;
+      node* next_;
+      node* prev_;
     };
 
   public:
     class const_iterator {
     protected:
-      const_iterator(node *p) : curr_(p) {}
+      const_iterator(node* p) : curr_(p) {}
 
     public:
       const_iterator() : curr_(nullptr) {}
 
-      const T &operator*() const
+      const T& operator*() const
       {
         return curr_->elem_;
       }
 
-      const_iterator &operator++()
+      const_iterator& operator++()
       {
         curr_ = curr_->next_;
         return *this;
@@ -49,7 +49,7 @@ namespace ds {
         return temp;
       }
 
-      const_iterator &operator--()
+      const_iterator& operator--()
       {
         curr_ = curr_->prev_;
         return *this;
@@ -62,38 +62,38 @@ namespace ds {
         return tmep;
       }
 
-      bool operator==(const const_iterator &rhs) const
+      bool operator==(const const_iterator& rhs) const
       {
         return (curr_ == rhs.curr_);
       }
 
-      bool operator!=(const const_iterator &rhs) const
+      bool operator!=(const const_iterator& rhs) const
       {
         return (curr_ != rhs.curr_);
       }
 
     protected:
-      node *curr_;
+      node* curr_;
     };
 
     class iterator : public const_iterator {
     protected:
-      iterator(node *p) : const_iterator(p) {}
+      iterator(node* p) : const_iterator(p) {}
 
     public:
       iterator() {}
 
-      T &operator*()
+      T& operator*()
       {
         return curr_->elem_;
       }
 
-      const T &operator*() const
+      const T& operator*() const
       {
         return const_iterator::operator*();
       }
 
-      iterator &operator++()
+      iterator& operator++()
       {
         curr_ = curr_->next_;
         return *this;
@@ -106,7 +106,7 @@ namespace ds {
         return temp;
       }
 
-      iterator &operator--()
+      iterator& operator--()
       {
         curr_ = curr_->prev_;
         return *this;
@@ -126,19 +126,19 @@ namespace ds {
       init();
     }
 
-    list(const list &rhs)
+    list(const list& rhs)
     {
       init();
 
-      for (const auto &elem : rhs)
+      for (const auto& elem : rhs)
         push_back(elem);
     }
 
-    list(list &&rhs)
+    list(list&& rhs)
     {
       init();
 
-      for (const auto &elem : rhs)
+      for (const auto& elem : rhs)
         push_back(std::move(elem));
     }
 
@@ -149,21 +149,21 @@ namespace ds {
       delete tail_;
     }
 
-    list &operator=(const list &rhs)
+    list& operator=(const list& rhs)
     {
       clear();
 
-      for (const auto &elem : rhs)
+      for (const auto& elem : rhs)
         push_back(elem);
 
       return *this;
     }
 
-    list &operator=(list &&rhs)
+    list& operator=(list&& rhs)
     {
       clear();
 
-      for (const auto &elem : rhs)
+      for (const auto& elem : rhs)
         push_back(std::move(elem));
 
       return *this;
@@ -205,42 +205,42 @@ namespace ds {
         pop_front();
     }
 
-    T &front()
+    T& front()
     {
       return (*begin());
     }
 
-    const T &front() const
+    const T& front() const
     {
       return (*cbegin());
     }
 
-    T &back()
+    T& back()
     {
       return (*--end());
     }
 
-    const T &back() const
+    const T& back() const
     {
       return (*--cend());
     }
 
-    void push_front(const T &elem)
+    void push_front(const T& elem)
     {
       insert(cbegin(), elem);
     }
 
-    void push_front(T &&elem)
+    void push_front(T&& elem)
     {
       insert(cbegin(), std::move(elem));
     }
 
-    void push_back(const T &elem)
+    void push_back(const T& elem)
     {
       insert(cend(), elem);
     }
 
-    void push_back(T &&elem)
+    void push_back(T&& elem)
     {
       insert(cend(), std::move(elem));
     }
@@ -255,10 +255,10 @@ namespace ds {
       erase(--end());
     }
 
-    iterator insert(const_iterator pos, const T &elem)
+    iterator insert(const_iterator pos, const T& elem)
     {
-      node *curr = pos.curr_;
-      node *new_node = new node(elem, curr, curr->prev_);
+      node* curr = pos.curr_;
+      node* new_node = new node(elem, curr, curr->prev_);
 
       curr->prev_->next_ = new_node;
       curr->prev_ = new_node;
@@ -268,7 +268,7 @@ namespace ds {
 
     iterator erase(const_iterator pos)
     {
-      node *curr = pos.curr_;
+      node* curr = pos.curr_;
       iterator return_itr(curr->next_);
 
       curr->prev_->next_ = curr->next_;
@@ -290,8 +290,8 @@ namespace ds {
 
   private:
     uint32_t size_;
-    node *head_;
-    node *tail_;
+    node* head_;
+    node* tail_;
   };
 } // namespace ds
 #endif
