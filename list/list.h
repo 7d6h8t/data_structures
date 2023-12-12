@@ -41,7 +41,7 @@ namespace ds {
 
       const T& operator*() const
       {
-        return retrieve();
+        return curr_->elem_;
       }
 
       const_iterator& operator++()
@@ -81,12 +81,6 @@ namespace ds {
       }
 
     protected:
-      T& retrieve() const
-      {
-        return curr_->elem_;
-      }
-
-    protected:
       node* curr_;
     }; // const_iterator
 
@@ -101,7 +95,7 @@ namespace ds {
 
       T& operator*()
       {
-        return const_iterator::retrieve();
+        return this->curr_->elem_;
       }
 
       const T& operator*() const
