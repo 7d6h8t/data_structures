@@ -1,25 +1,23 @@
-#include "../list/list.h"
+#ifndef QUEUE_H
+#define QUEUE_H
+
+#include "list.h"
 
 namespace ds {
   template <typename T, typename sequence = ds::list<T>>
-  class queue final
-  {
+  class queue final {
   public:
-    using value_type = sequence::value_type;
-    using reference = sequence::reference;
-    using size_type = sequence::size_type;
-
     queue() = default;
     ~queue() = default;
 
   public:
     // element access
-    reference front()
+    T& front()
     {
       return container_.front();
     }
 
-    reference back()
+    T& back()
     {
       return container_.back();
     }
@@ -30,13 +28,13 @@ namespace ds {
       return container_.empty();
     }
 
-    size_type size() const
+    uint32_t size() const
     {
       return container_.size();
     }
 
     // modifiers
-    void push(const value_type &value)
+    void push(const T& value)
     {
       container_.push_back(value);
     }
@@ -48,5 +46,6 @@ namespace ds {
 
   private:
     sequence container_;
-  };
+  }; // queue
 } // namespace ds
+#endif
