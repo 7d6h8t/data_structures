@@ -1,20 +1,22 @@
+#ifndef VECTOR_H
+#define VECTOR_H
+
 #include <concepts>
 
 namespace ds {
   template <typename T>
-  class vector_iterator
-  {
+  class vector_iterator {
   private:
     using value_type = T;
     using size_type = std::size_t;
-    using reference = T &;
-    using pointer = T *;
+    using reference = T&;
+    using pointer = T*;
     using self = vector_iterator<T>;
 
   public:
     vector_iterator() noexcept : current_() {}
     vector_iterator(const pointer p) noexcept : current_(p) {}
-    vector_iterator(const vector_iterator &rhs) noexcept : current_(rhs.base())
+    vector_iterator(const vector_iterator& rhs) noexcept : current_(rhs.base())
     {
     }
 
@@ -29,7 +31,7 @@ namespace ds {
       return current_;
     }
 
-    self &operator++()
+    self& operator++()
     {
       ++current_;
       return *this;
@@ -40,7 +42,7 @@ namespace ds {
       return self(current_++);
     }
 
-    self &operator--()
+    self& operator--()
     {
       --current_;
       return *this;
@@ -56,7 +58,7 @@ namespace ds {
       return current_[n];
     }
 
-    self &operator+=(const size_type n)
+    self& operator+=(const size_type n)
     {
       current_ += n;
       return *this;
@@ -67,7 +69,7 @@ namespace ds {
       return self(current_ + n);
     }
 
-    self &operator-=(const size_type n)
+    self& operator-=(const size_type n)
     {
       current_ -= n;
       return *this;
@@ -78,17 +80,17 @@ namespace ds {
       return self(current_ - n);
     }
 
-    bool operator==(const self &rhs) const
+    bool operator==(const self& rhs) const
     {
       return current_ == rhs.base();
     }
 
-    bool operator!=(const self &rhs) const
+    bool operator!=(const self& rhs) const
     {
       return !(*this == rhs);
     }
 
-    const pointer &base() const noexcept
+    const pointer& base() const noexcept
     {
       return current_;
     }
@@ -98,21 +100,20 @@ namespace ds {
   };
 
   template <typename T>
-  class vector
-  {
+  class vector {
   public:
     using value_type = T;
     using size_type = std::size_t;
-    using pointer = T *;
-    using reference = T &;
-    using const_reference = const T &;
+    using pointer = T*;
+    using reference = T&;
+    using const_reference = const T&;
     using iterator = vector_iterator<T>;
     using const_iterator = const iterator;
 
   public:
     template <typename... types>
       requires(std::same_as<T, types> && ...)
-    vector(const types &...args) : size_(0), capacity_(0)
+    vector(const types&... args) : size_(0), capacity_(0)
     {
       reserve(sizeof...(args));
       (push_back(args), ...);
@@ -196,7 +197,7 @@ namespace ds {
       return size_ == 0;
     }
 
-    bool size() const noexcept
+    size_type size() const noexcept
     {
       return size_;
     }
@@ -213,7 +214,7 @@ namespace ds {
     }
 
     // modifiers
-    iterator insert(const_iterator pos, const value_type &value)
+    iterator insert(const_iterator pos, const value_type& value)
     {
       size_type index = pos.base() - head_.base();
 
@@ -239,7 +240,7 @@ namespace ds {
       return pos;
     }
 
-    void push_back(const value_type &value)
+    void push_back(const value_type& value)
     {
       insert(end(), value);
     }
@@ -249,7 +250,7 @@ namespace ds {
     }
 
   private:
-    void realloc(const size_type &n)
+    void realloc(const size_type& n)
     {
       capacity_ = n;
       iterator temp(new value_type[capacity_]);
@@ -267,3 +268,4 @@ namespace ds {
     iterator head_;
   };
 } // namespace ds
+#endif
