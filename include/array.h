@@ -1,3 +1,6 @@
+#ifndef ARRAY_H
+#define ARRAY_H
+
 #include <compare>
 #include <concepts>
 #include <cstdint>
@@ -5,22 +8,21 @@
 
 namespace ds {
   template <typename T, std::size_t size_>
-  class array final
-  {
+  class array final {
   private:
     using value_type = T;
     using size_type = std::size_t;
-    using reference = value_type &;
-    using const_reference = const value_type &;
-    using pointer = value_type *;
-    using const_pointer = const value_type *;
-    using iterator = value_type *;
-    using const_iterator = const value_type *;
+    using reference = value_type&;
+    using const_reference = const value_type&;
+    using pointer = value_type*;
+    using const_pointer = const value_type*;
+    using iterator = value_type*;
+    using const_iterator = const value_type*;
 
   public:
     template <typename... types>
       requires(std::same_as<T, types> && ...)
-    array(const types &...args)
+    array(const types&... args)
     {
       size_type index = 0;
       ((elems_[index++] = args), ...);
@@ -129,11 +131,11 @@ namespace ds {
 
   private:
     T elems_[size_];
-  };
+  }; // array
 
   template <typename T, std::size_t size>
-  std::weak_ordering operator<=>(const ds::array<T, size> &lhs,
-                                 const ds::array<T, size> &rhs) noexcept
+  std::weak_ordering operator<=>(const ds::array<T, size>& lhs,
+                                 const ds::array<T, size>& rhs) noexcept
   {
     if (lhs.size() < rhs.size())
       return std::weak_ordering::less;
@@ -153,9 +155,10 @@ namespace ds {
   }
 
   template <typename T, std::size_t size>
-  bool operator==(const ds::array<T, size> &lhs,
-                  const ds::array<T, size> &rhs) noexcept
+  bool operator==(const ds::array<T, size>& lhs,
+                  const ds::array<T, size>& rhs) noexcept
   {
     return (lhs <=> rhs) == std::strong_ordering::equal;
   }
 } // namespace ds
+#endif
