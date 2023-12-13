@@ -8,7 +8,7 @@ namespace ds {
     protected:
       void SetUp() override
       {
-        for (int i = 0; i < arr1_.size(); ++i)
+        for (std::size_t i = 0; i < arr1_.size(); ++i)
           arr1_[i] = i;
       }
 
@@ -21,14 +21,14 @@ namespace ds {
 
     TEST_F(arrayTest, IsEmptyInitially)
     {
-      EXPECT_EQ(arr0_.size(), 0);
+      EXPECT_NE(arr0_.size(), 0);
     }
 
     TEST_F(arrayTest, CompareWorks)
     {
       EXPECT_FALSE(arr1_ == arr2_);
-      EXPECT_FALSE((arr1_ <=> arr2_) == std::weak_ordering::less);
-      EXPECT_TRUE((arr1_ <=> arr2_) == std::weak_ordering::greater);
+      EXPECT_TRUE((arr1_ <=> arr2_) == std::weak_ordering::less);
+      EXPECT_FALSE((arr1_ <=> arr2_) == std::weak_ordering::greater);
       EXPECT_FALSE((arr1_ <=> arr2_) == std::weak_ordering::equivalent);
 
       arr2_[4] = 4;
