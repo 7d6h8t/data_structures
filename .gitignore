@@ -33,6 +33,7 @@
 
 # output director
 bin/
+build/
 
 # VS code
 .vscode
