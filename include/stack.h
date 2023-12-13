@@ -1,20 +1,18 @@
-#include "../list/list.h"
+#ifndef STACK_H
+#define STACK_H
+
+#include "list.h"
 
 namespace ds {
   template <typename T, typename sequence = ds::list<T>>
-  class stack final
-  {
+  class stack final {
   public:
-    using value_type = sequence::value_type;
-    using reference = sequence::reference;
-    using size_type = sequence::size_type;
-
     stack() = default;
     ~stack() = default;
 
   public:
     // element access
-    reference top()
+    T& top()
     {
       return container.back();
     }
@@ -25,13 +23,13 @@ namespace ds {
       return container.empty();
     }
 
-    size_type size() const
+    uint32_t size() const
     {
       return container.size();
     }
 
     // modifiers
-    void push(const value_type &value)
+    void push(const T& value)
     {
       container.push_back(value);
     }
@@ -43,5 +41,6 @@ namespace ds {
 
   private:
     sequence container;
-  };
+  }; // stack
 } // namespace ds
+#endif
