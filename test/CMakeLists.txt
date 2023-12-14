@@ -10,8 +10,8 @@ file(GLOB_RECURSE SRC_FILES CONFIGURE_DEPENDS
   ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
 )
 
-add_executable(ds_test ${SRC_FILES})
-target_link_libraries(ds_test PRIVATE gtest gtest_main)
+add_executable(unittest ${SRC_FILES})
+target_link_libraries(unittest PRIVATE gtest gtest_main)
 
-target_include_directories(ds_test PUBLIC ${CMAKE_SOURCE_DIR}/include)
-target_compile_options(ds_test PRIVATE -Wall)
+target_include_directories(unittest PUBLIC ${CMAKE_SOURCE_DIR}/include)
+target_compile_options(unittest PRIVATE -Wall)
