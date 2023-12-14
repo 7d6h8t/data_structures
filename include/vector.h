@@ -77,6 +77,18 @@ class vector final {
     requires(std::same_as<T, types> && ...)
   vector(const types&... ars) {}
 
+  iterator begin() { return iterator(head_); }
+
+  const_iterator cbegin() const { return const_iterator(head_); }
+
+  iterator end() { return iterator(head_ + size_); }
+
+  const_iterator cend() const { return const_iterator(head_ + size_); }
+
+  uint32_t size() const { return size_; }
+
+  bool empty() const { return size_ == 0; }
+
  private:
   uint32_t size_;
   uint32_t capacity_;
