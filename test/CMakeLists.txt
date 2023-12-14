@@ -14,4 +14,4 @@ add_executable(ds_test ${SRC_FILES})
 target_link_libraries(ds_test PRIVATE gtest gtest_main)
 
 target_include_directories(ds_test PUBLIC ${CMAKE_SOURCE_DIR}/include)
-target_compile_options(ds_test PRIVATE -Wall -Werror)
+target_compile_options(ds_test PRIVATE -Wall)
