@@ -71,7 +71,7 @@ class vector final {
   };  // iterator
 
  public:
-  vector() {}
+  vector() { init(); }
 
   template <typename... types>
     requires(std::same_as<T, types> && ...)
@@ -88,6 +88,28 @@ class vector final {
   uint32_t size() const { return size_; }
 
   bool empty() const { return size_ == 0; }
+
+  iterator insert(const_iterator pos, const T& elem) {
+    if (size_ == capacity_) realloc(size_ * 2);
+
+    ++size_;
+  }
+
+ private:
+  void init() {
+    size_ = 0;
+    capacity_ = 0;
+    head_ = nullptr;
+  }
+
+  void realloc(uint32_t n) {
+    capacity_ = n;
+    T* temp = new T[n];
+    for (int i = 0; i < size_; ++i) T[i] = head_[i];
+
+    delete[] head_;
+    head_ = temp;
+  }
 
  private:
   uint32_t size_;
