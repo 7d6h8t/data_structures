@@ -9,21 +9,60 @@ namespace {
 
 class vectorTest : public testing::Test {
  protected:
-  // void SetUp() override {}
+  void SetUp() override {
+    vec1_.reserve(4);
+    vec1_.push_back(0);
+    vec1_.push_back(1);
+    vec1_.push_back(2);
+    vec1_.push_back(3);
+  }
 
   // void TearDown() override {}
 
-  vector<int32_t> vec1_{0, 1, 2, 3};
+  vector<int32_t> vec0_;
+  vector<int32_t> vec1_;
   vector<int32_t> vec2_{0, 1, 2, 3, 4};
+  vector<std::string> vec3_;
 };  // vectorTest
 
+TEST_F(vectorTest, IsEmptyInitially) {
+  EXPECT_EQ(vec0_.size(), 0);
+  EXPECT_TRUE(vec0_.empty());
+
+  EXPECT_EQ(vec3_.size(), 0);
+  EXPECT_TRUE(vec3_.empty());
+}
+
+TEST_F(vectorTest, ClearWorks) {
+  vec0_.clear();
+  EXPECT_EQ(vec0_.size(), 0);
+  EXPECT_TRUE(vec0_.empty());
+
+  vec2_.clear();
+  EXPECT_EQ(vec2_.size(), 0);
+  EXPECT_TRUE(vec2_.empty());
+}
+
 TEST_F(vectorTest, PushWorks) {
+  vec0_.push_back(0);
+  vec0_.push_back(1);
+  vec0_.push_back(2);
+  vec0_.push_back(3);
+  vec0_.push_back(4);
+  EXPECT_EQ(vec0_.size(), 5);
+
   vec2_.push_back(5);
   vec2_.push_back(6);
   EXPECT_EQ(vec2_.size(), 7);
   EXPECT_EQ(vec2_[1], 1);
-  EXPECT_EQ(vec2_.front(), 10);
+  EXPECT_EQ(vec2_.front(), 0);
   EXPECT_EQ(vec2_.back(), 6);
+
+  vec3_.push_back("hello");
+  vec3_.push_back("world");
+  vec3_.push_back("!");
+  EXPECT_EQ(vec3_.size(), 3);
+  EXPECT_EQ(vec3_[1], "world");
 }
 
 TEST_F(vectorTest, PopWorks) {
