@@ -21,13 +21,15 @@ class vector final {
     const T& operator*() const { return *pos_; }
 
     const_iterator operator+(int n) {
-      pos_ += n;
-      return *this;
+      const_iterator temp = *this;
+      temp.pos_ += n;
+      return temp;
     }
 
     const_iterator operator-(int n) {
-      pos_ -= n;
-      return *this;
+      const_iterator temp = *this;
+      temp.pos_ -= n;
+      return temp;
     }
 
     bool operator==(const const_iterator& rhs) const {
