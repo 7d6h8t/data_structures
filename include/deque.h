@@ -26,25 +26,37 @@ class deque final {
 
   iterator begin() { return iterator(chunk_head_); }
 
-  uint32_t size() const { return 1; }
+  const_iterator cbegin() const { return const_iterator(chunk_head_); }
 
-  bool empty() const { return true; }
+  iterator end() { return iterator(chunk_head_ + size_); }
+
+  const_iterator cend() const { return const_iterator(chunk_head_ + size_); }
+
+  uint32_t size() const { return size_; }
+
+  bool empty() const { return size_ == 0; }
 
   void clear() const {}
 
-  T& operator[](const uint32_t n) { return elem_; }
+  T& operator[](const uint32_t n) {
+    return chunk_head_[chunk_size_ / n][chunk_size_ % n];
+  }
 
-  T& front() { return elem_; }
+  T& front() { return (*begin()); }
 
-  const T& front() const { return elem_; }
+  const T& front() const { return (*cbegin()); }
 
-  T& back() { return elem_; }
+  T& back() { return (*end()); }
 
-  const T& back() const { return elem_; }
+  const T& back() const { return (*cend()); }
 
   void push_back(const T& elem) {}
 
   void pop_back() {}
+
+  iterator insert(const_iterator pos, const T& elem) {}
+
+  iterator erase(const_iterator pos) {}
 
  private:
   void init() {
@@ -54,7 +66,8 @@ class deque final {
 
  private:
   T** chunk_head_;
-  uint32_t size_:
+  uint32_t size_;
+  static const uint32_t chunk_size_ = 5;
 };  // deque
 }  // namespace ds
 #endif
