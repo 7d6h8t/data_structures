@@ -12,7 +12,7 @@ class deque final {
     friend class deque<T>;
 
    protected:
-    const_iterator(const T** p, const uint32_t idx) : pos_(p), index_(idx) {}
+    const_iterator(T** p, const uint32_t idx) : pos_(p), index_(idx) {}
 
    public:
     const_iterator() : pos_(nullptr), index_(0) {}
@@ -48,7 +48,7 @@ class deque final {
     friend class deque<T>;
 
    protected:
-    iterator(const T** p, const uint32_t idx) : const_iterator(p, idx) {}
+    iterator(T** p, const uint32_t idx) : const_iterator(p, idx) {}
 
    public:
     iterator() {}
@@ -93,15 +93,13 @@ class deque final {
 
   ~deque() {}
 
-  iterator begin() { return iterator(map_[0]); }
+  iterator begin() { return iterator(map_, 0); }
 
-  const_iterator cbegin() const { return const_iterator(map_[0]); }
+  const_iterator cbegin() const { return const_iterator(map_, 0); }
 
-  iterator end() { return iterator(map_[BLOCK_SIZE / size_]); }
+  iterator end() { return iterator(map_, size_); }
 
-  const_iterator cend() const {
-    return const_iterator(map_[BLOCK_SIZE / size_]);
-  }
+  const_iterator cend() const { return const_iterator(map_, size_); }
 
   uint32_t size() const { return size_; }
 
@@ -110,7 +108,7 @@ class deque final {
   void clear() const {}
 
   T& operator[](const uint32_t n) {
-    return map_[BLOCK_SIZE / n][BLOCK_SIZE % n];
+    return map_[n / BLOCK_SIZE][n % BLOCK_SIZE];
   }
 
   T& front() { return (*begin()); }
@@ -127,26 +125,23 @@ class deque final {
 
   iterator insert(const_iterator pos, const T& elem) {
     ++size_;
-    return iterator(map_[0]);
+    return iterator(map_, 0);
   }
 
   iterator erase(const_iterator pos) {
     --size_;
-    return iterator(map_[0]);
+    return iterator(map_, 0);
   }
 
  private:
   void init() {
     size_ = 0;
-    block_count_ = 0;
-    map_ = new T*[1];
-    map_[1] = new T[BLOCK_SIZE];
+    map_ = nullptr;
   }
 
  private:
   T** map_;
   uint32_t size_;
-  uint32_t block_count_;
 };  // deque
 }  // namespace ds
 #endif
