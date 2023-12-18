@@ -4,16 +4,75 @@
 #include <concepts>
 #include <cstdint>
 
-#include "array.h"
-#include "list.h"
-
 namespace ds {
-template <typename T>
+template <typename T, uint32_t BlockSize = 5>
 class deque final {
  public:
-  class const_iterator {};  // const_iterator
+  class const_iterator {
+    friend class deque<T>;
 
-  class iterator : public const_iterator {};  // iterator
+   protected:
+    const_iterator(T* p) : pos_(p) {}
+
+   public:
+    const_iterator() : pos_(nullptr) {}
+
+    const T& operator*() const { return *pos_; }
+
+    const_iterator operator+(int n) {
+      pos_ += n;
+      return *this;
+    }
+
+    const_iterator operator-(int n) {
+      pos_ -= n;
+      return *this;
+    }
+
+    bool operator==(const const_iterator& rhs) const {
+      return (pos_ == rhs.pos_);
+    }
+
+    bool operator!=(const const_iterator& rhs) const { return !(*this == rhs); }
+
+   protected:
+    T* pos_;
+    uint32_t block_index_;
+  };  // const_iterator
+
+  class iterator : public const_iterator {
+    friend class deque<T>;
+
+   protected:
+    iterator(T* p) : const_iterator(p) {}
+
+   public:
+    iterator() {}
+
+    T& operator*() { return *(this->pos_); }
+
+    iterator& operator++() {
+      ++(this->pos_);
+      return *this;
+    }
+
+    iterator operator++(int) {
+      iterator temp = *this;
+      ++(*this);
+      return temp;
+    }
+
+    iterator& operator--() {
+      --(this->pos_);
+      return *this;
+    }
+
+    iterator operator--(int) {
+      iterator temp = *this;
+      --(*this);
+      return temp;
+    }
+  };  // iterator
 
  public:
   deque() { init(); }
@@ -24,13 +83,15 @@ class deque final {
 
   ~deque() {}
 
-  iterator begin() { return iterator(chunk_head_); }
+  iterator begin() { return iterator(map_[0]); }
 
-  const_iterator cbegin() const { return const_iterator(chunk_head_); }
+  const_iterator cbegin() const { return const_iterator(map_[0]); }
 
-  iterator end() { return iterator(chunk_head_ + size_); }
+  iterator end() { return iterator(map_[BlockSize / size_]); }
 
-  const_iterator cend() const { return const_iterator(chunk_head_ + size_); }
+  const_iterator cend() const {
+    return const_iterator(map_[BlockSize / size_]);
+  }
 
   uint32_t size() const { return size_; }
 
@@ -38,9 +99,7 @@ class deque final {
 
   void clear() const {}
 
-  T& operator[](const uint32_t n) {
-    return chunk_head_[chunk_size_ / n][chunk_size_ % n];
-  }
+  T& operator[](const uint32_t n) { return map_[BlockSize / n][BlockSize % n]; }
 
   T& front() { return (*begin()); }
 
@@ -50,24 +109,29 @@ class deque final {
 
   const T& back() const { return (*cend()); }
 
-  void push_back(const T& elem) {}
+  void push_back(const T& elem) { insert(cend(), elem); }
 
-  void pop_back() {}
+  void pop_back() { erase(--end()); }
 
-  iterator insert(const_iterator pos, const T& elem) {}
+  iterator insert(const_iterator pos, const T& elem) {
+    ++size_;
+    return iterator(map_[0]);
+  }
 
-  iterator erase(const_iterator pos) {}
+  iterator erase(const_iterator pos) {
+    --size_;
+    return iterator(map_[0]);
+  }
 
  private:
   void init() {
     size_ = 0;
-    chunk_head_ = nullptr;
+    map_ = nullptr;
   }
 
  private:
-  T** chunk_head_;
+  T** map_;
   uint32_t size_;
-  static const uint32_t chunk_size_ = 5;
 };  // deque
 }  // namespace ds
 #endif
