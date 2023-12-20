@@ -105,7 +105,9 @@ class deque final {
 
   bool empty() const { return size_ == 0; }
 
-  void clear() const {}
+  void clear() {
+    while (!empty()) pop_back();
+  }
 
   T& operator[](const uint32_t n) {
     return map_[n / BLOCK_SIZE][n % BLOCK_SIZE];
@@ -115,33 +117,67 @@ class deque final {
 
   const T& front() const { return (*cbegin()); }
 
-  T& back() { return (*end()); }
+  T& back() { return *(--end()); }
 
-  const T& back() const { return (*cend()); }
+  const T& back() const { return *(--cend()); }
 
   void push_back(const T& elem) { insert(cend(), elem); }
 
   void pop_back() { erase(--end()); }
 
   iterator insert(const_iterator pos, const T& elem) {
+    if (size_ == capacity_ * BLOCK_SIZE) realloc((size_ / BLOCK_SIZE) + 1);
+
+    uint32_t index = pos.index_;
+
+    for (uint32_t i = size_; i > index; --i) {
+      map_[i / BLOCK_SIZE][i % BLOCK_SIZE] =
+          map_[(i - 1) / BLOCK_SIZE][(i - 1) % BLOCK_SIZE];
+    }
+
+    map_[index / BLOCK_SIZE][index % BLOCK_SIZE] = elem;
     ++size_;
-    return iterator(map_, 0);
+    return iterator(map_, index);
   }
 
   iterator erase(const_iterator pos) {
+    uint32_t index = pos.index_;
+
+    for (uint32_t i = index; i < size_ - 1; ++i) {
+      map_[i / BLOCK_SIZE][i % BLOCK_SIZE] =
+          map_[(i + 1) / BLOCK_SIZE][(i + 1) % BLOCK_SIZE];
+    }
+
     --size_;
-    return iterator(map_, 0);
+    return iterator(map_, index);
   }
 
  private:
   void init() {
     size_ = 0;
+    capacity_ = 0;
     map_ = nullptr;
+  }
+
+  void realloc(uint32_t n) {
+    if (capacity_ >= n) return;
+
+    capacity_ = n;
+
+    T** temp = new T*[capacity_];
+    for (uint32_t i = 0; i < capacity_; ++i) temp[i] = new T[BLOCK_SIZE];
+
+    for (uint32_t i = 0; i < size_ / BLOCK_SIZE; ++i) temp[i] = map_[i];
+
+    if (map_ != nullptr) delete[] map_;
+
+    map_ = temp;
   }
 
  private:
   T** map_;
   uint32_t size_;
+  uint32_t capacity_;
 };  // deque
 }  // namespace ds
 #endif
