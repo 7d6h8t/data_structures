@@ -80,5 +80,32 @@ TEST_F(dequeTest, PopWorks) {
   EXPECT_EQ(deq2_.front(), 2);
 }
 
+TEST_F(dequeTest, InsertWorks) {
+  deq2_.insert(deq2_.end(), 5);
+  for (auto itr = deq2_.begin(); itr != deq2_.end(); ++itr) {
+    if (*itr == 1) {
+      deq2_.insert(itr, 10);
+      break;
+    }
+  }
+  EXPECT_EQ(deq2_.size(), 7);
+  EXPECT_EQ(deq2_.front(), 0);
+  EXPECT_EQ(deq2_[1], 10);
+}
+
+TEST_F(dequeTest, EraseWorks) {
+  deq1_.erase(deq1_.begin());
+  for (auto itr = deq1_.begin(); itr != deq1_.end();) {
+    if (*itr % 2 == 0)
+      itr = deq1_.erase(itr);
+    else
+      ++itr;
+  }
+
+  EXPECT_EQ(deq1_.size(), 2);
+  EXPECT_EQ(deq1_.back(), 3);
+  EXPECT_EQ(deq1_[1], 3);
+}
+
 }  // namespace
 }  // namespace ds
