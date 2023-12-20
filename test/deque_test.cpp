@@ -41,18 +41,23 @@ TEST_F(dequeTest, ClearWorks) {
 }
 
 TEST_F(dequeTest, PushWorks) {
-  deq0_.push_back(0);
-  deq0_.push_back(1);
-  deq0_.push_back(2);
-  deq0_.push_back(3);
+  deq0_.push_front(3);
+  deq0_.push_front(2);
+  deq0_.push_front(1);
   deq0_.push_back(4);
-  EXPECT_EQ(deq0_.size(), 5);
+  deq0_.push_back(5);
+  deq0_.push_back(6);
+  deq0_.push_front(0);
+  EXPECT_EQ(deq0_.size(), 7);
 
   deq2_.push_back(5);
   deq2_.push_back(6);
-  EXPECT_EQ(deq2_.size(), 7);
-  EXPECT_EQ(deq2_[1], 1);
-  EXPECT_EQ(deq2_.front(), 0);
+  deq2_.push_front(11);
+  deq2_.push_front(10);
+
+  EXPECT_EQ(deq2_.size(), 9);
+  EXPECT_EQ(deq2_[1], 11);
+  EXPECT_EQ(deq2_.front(), 10);
   EXPECT_EQ(deq2_.back(), 6);
 
   deq3_.push_back("hello");
@@ -69,10 +74,10 @@ TEST_F(dequeTest, PopWorks) {
   EXPECT_EQ(deq1_.back(), 1);
 
   deq2_.pop_back();
-  deq2_.pop_back();
-  deq2_.pop_back();
+  deq2_.pop_front();
+  deq2_.pop_front();
   EXPECT_EQ(deq2_.size(), 2);
-  EXPECT_EQ(deq2_.back(), 1);
+  EXPECT_EQ(deq2_.front(), 2);
 }
 
 }  // namespace

@@ -125,6 +125,10 @@ class deque final {
 
   void pop_back() { erase(--end()); }
 
+  void push_front(const T& elem) { insert(cbegin(), elem); }
+
+  void pop_front() { erase(cbegin()); }
+
   iterator insert(const_iterator pos, const T& elem) {
     if (size_ == capacity_ * BLOCK_SIZE) realloc((size_ / BLOCK_SIZE) + 1);
 
