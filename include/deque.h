@@ -176,13 +176,12 @@ class deque final {
   void pop_front() { erase(cbegin()); }
 
   iterator insert(const_iterator pos, const T& elem) {
-    iterator itr{this, pos.block_index_, pos.index_};
-
     if (pos == cbegin()) {
       if (pos.block_index_ == 0 && pos.index_ == 0)
-        realloc_front((capacity_ * 2) + 1);
+        realloc_front((capacity_ * 2) + 3);
 
-      *(--itr) = elem;
+      iterator itr = --begin();
+      *itr = elem;
       begin_block_ = itr.block_index_;
       begin_index_ = itr.index_;
 
@@ -190,8 +189,9 @@ class deque final {
     }
 
     if (end_block_ == capacity_ && end_index_ == BLOCK_SIZE - 1)
-      realloc_back((capacity_ * 2) + 1);
+      realloc_back((capacity_ * 2) + 3);
 
+    iterator itr{this, pos.block_index_, pos.index_};
     for (auto it = itr; it != end(); ++it) *(it + 1) = *it;
 
     *itr = elem;
@@ -216,8 +216,8 @@ class deque final {
     size_ = 0;
     begin_index_ = end_index_ = 0;
     begin_block_ = end_block_ = 0;
-    capacity_ = 0;
     map_ = nullptr;
+    capacity_ = 0;
   }
 
   void realloc_front(const uint32_t n) {
@@ -228,11 +228,11 @@ class deque final {
 
     uint32_t new_alloc_count = n - capacity_;
 
-    for (uint32_t i = begin_block_; i <= end_block_; ++i)
-      temp[new_alloc_count + i] = map_[i];
+    for (uint32_t i = begin_block_; i < end_block_; ++i)
+      temp[new_alloc_count + i - 1] = map_[i];
 
-    begin_block_ += new_alloc_count;
-    end_block_ += new_alloc_count;
+    begin_block_ += new_alloc_count - 1;
+    end_block_ += new_alloc_count - 1;
     capacity_ = n;
 
     if (map_ != nullptr) delete[] map_;
@@ -246,7 +246,7 @@ class deque final {
     T** temp = new T*[n];
     for (uint32_t i = 0; i < n; ++i) temp[i] = new T[BLOCK_SIZE];
 
-    for (uint32_t i = begin_block_; i <= end_block_; ++i)
+    for (uint32_t i = begin_block_; i < end_block_; ++i)
       temp[i] = map_[i];
 
     if (map_ != nullptr) delete[] map_;
