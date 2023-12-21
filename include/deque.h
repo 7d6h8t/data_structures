@@ -3,6 +3,7 @@
 
 #include <concepts>
 #include <cstdint>
+#include <stdexcept>
 
 namespace ds {
 template <typename T, uint32_t BLOCK_SIZE = 5>
@@ -12,35 +13,46 @@ class deque final {
     friend class deque<T>;
 
    protected:
-    const_iterator(T** p, const uint32_t idx) : pos_(p), index_(idx) {}
+    const_iterator(const deque<T>* deq, const uint32_t i, const uint32_t j)
+        : deq_(deq), block_index_(i), index_(j) {}
 
    public:
-    const_iterator() : pos_(nullptr), index_(0) {}
+    const_iterator() : deq_(nullptr), block_index_(0), index_(0) {}
 
-    const T& operator*() const {
-      return pos_[index_ / BLOCK_SIZE][index_ % BLOCK_SIZE];
-    }
+    const T& operator*() const { return deq_->map_[block_index_][index_]; }
 
     const_iterator operator+(int n) {
       const_iterator temp = *this;
-      temp.index_ += n;
+      uint32_t total = (block_index_ * BLOCK_SIZE) + index_;
+
+      temp.block_index_ = (total + n) / BLOCK_SIZE;
+      temp.index_ = (total + n) % BLOCK_SIZE;
+
       return temp;
     }
 
     const_iterator operator-(int n) {
       const_iterator temp = *this;
-      temp.index_ -= n;
+      uint32_t total = (block_index_ * BLOCK_SIZE) + index_;
+
+      if (n > total) throw std::out_of_range("access violation!");
+
+      temp.block_index_ = (total - n) / BLOCK_SIZE;
+      temp.index_ = (total - n) % BLOCK_SIZE;
+
       return temp;
     }
 
     bool operator==(const const_iterator& rhs) const {
-      return (pos_ == rhs.pos_) && (index_ == rhs.index_);
+      return (deq_ == rhs.deq_) && (block_index_ == rhs.block_index_) &&
+             (index_ == rhs.index_);
     }
 
     bool operator!=(const const_iterator& rhs) const { return !(*this == rhs); }
 
    protected:
-    T** pos_;
+    const deque<T>* deq_;
+    uint32_t block_index_;
     uint32_t index_;
   };  // const_iterator
 
@@ -48,18 +60,43 @@ class deque final {
     friend class deque<T>;
 
    protected:
-    iterator(T** p, const uint32_t idx) : const_iterator(p, idx) {}
+    iterator(deque<T>* deq, const uint32_t i, const uint32_t j)
+        : const_iterator(deq, i, j) {}
 
    public:
     iterator() {}
 
     T& operator*() {
-      return this
-          ->pos_[(this->index_ / BLOCK_SIZE)][(this->index_ % BLOCK_SIZE)];
+      return this->deq_->map_[this->block_index_][this->index_];
+    }
+
+    iterator operator+(int n) {
+        iterator temp = *this;
+        uint32_t total = (this->block_index_ * BLOCK_SIZE) + this->index_;
+
+        temp.block_index_ = (total + n) / BLOCK_SIZE;
+        temp.index_ = (total + n) % BLOCK_SIZE;
+
+        return temp;
+    }
+
+    iterator operator-(int n) {
+        iterator temp = *this;
+        uint32_t total = (this->block_index_ * BLOCK_SIZE) + this->index_;
+
+        if (n > total) throw std::out_of_range("access violation!");
+
+        temp.block_index_ = (total - n) / BLOCK_SIZE;
+        temp.index_ = (total - n) % BLOCK_SIZE;
+
+        return temp;
     }
 
     iterator& operator++() {
-      ++(this->index_);
+      if (++(this->index_) == BLOCK_SIZE) {
+        ++(this->block_index_);
+        (this->index_) = 0;
+      }
       return *this;
     }
 
@@ -70,7 +107,12 @@ class deque final {
     }
 
     iterator& operator--() {
-      --(this->index_);
+      if ((this->index_) == 0) {
+        --(this->block_index_);
+        (this->index_) = BLOCK_SIZE - 1;
+      } else {
+        --(this->index_);
+      }
       return *this;
     }
 
@@ -93,13 +135,17 @@ class deque final {
 
   ~deque() {}
 
-  iterator begin() { return iterator(map_, 0); }
+  iterator begin() { return iterator(this, begin_block_, begin_index_); }
 
-  const_iterator cbegin() const { return const_iterator(map_, 0); }
+  const_iterator cbegin() const {
+    return const_iterator(this, begin_block_, begin_index_);
+  }
 
-  iterator end() { return iterator(map_, size_); }
+  iterator end() { return iterator(this, end_block_, end_index_ + 1); }
 
-  const_iterator cend() const { return const_iterator(map_, size_); }
+  const_iterator cend() const {
+    return const_iterator(this, end_block_, end_index_ + 1);
+  }
 
   uint32_t size() const { return size_; }
 
@@ -109,9 +155,7 @@ class deque final {
     while (!empty()) pop_back();
   }
 
-  T& operator[](const uint32_t n) {
-    return map_[n / BLOCK_SIZE][n % BLOCK_SIZE];
-  }
+  T& operator[](const uint32_t n) { return *(begin() + n); }
 
   T& front() { return (*begin()); }
 
@@ -130,7 +174,7 @@ class deque final {
   void pop_front() { erase(cbegin()); }
 
   iterator insert(const_iterator pos, const T& elem) {
-    if (size_ == capacity_ * BLOCK_SIZE) realloc((size_ / BLOCK_SIZE) + 1);
+    if (size_ == block_count_ * BLOCK_SIZE) realloc((size_ / BLOCK_SIZE) + 1);
 
     uint32_t index = pos.index_;
 
@@ -141,7 +185,7 @@ class deque final {
 
     map_[index / BLOCK_SIZE][index % BLOCK_SIZE] = elem;
     ++size_;
-    return iterator(map_, index);
+    return iterator(this, pos.block_index_, pos.index_);
   }
 
   iterator erase(const_iterator pos) {
@@ -153,23 +197,25 @@ class deque final {
     }
 
     --size_;
-    return iterator(map_, index);
+    return iterator(this, pos.block_index_, pos.index_);
   }
 
  private:
   void init() {
     size_ = 0;
-    capacity_ = 0;
+    block_count_ = 0;
+    begin_index_ = end_index_ = 0;
+    begin_block_ = end_block_ = 0;
     map_ = nullptr;
   }
 
   void realloc(uint32_t n) {
-    if (capacity_ >= n) return;
+    if (block_count_ >= n) return;
 
-    capacity_ = n;
+    block_count_ = n;
 
-    T** temp = new T*[capacity_];
-    for (uint32_t i = 0; i < capacity_; ++i) temp[i] = new T[BLOCK_SIZE];
+    T** temp = new T*[block_count_];
+    for (uint32_t i = 0; i < block_count_; ++i) temp[i] = new T[BLOCK_SIZE];
 
     for (uint32_t i = 0; i < size_ / BLOCK_SIZE; ++i) temp[i] = map_[i];
 
@@ -181,7 +227,9 @@ class deque final {
  private:
   T** map_;
   uint32_t size_;
-  uint32_t capacity_;
+  uint32_t block_count_;
+  uint32_t begin_block_, end_block_;
+  uint32_t begin_index_, end_index_;
 };  // deque
 }  // namespace ds
 #endif
